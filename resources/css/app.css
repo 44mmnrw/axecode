@@ -1,0 +1,65 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source '../**/*.jsx';
+@source '../**/*.ts';
+@source '../**/*.tsx';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+}
+
+@layer utilities {
+    /* Hero: animated neon waves + vortex */
+    @keyframes hero-float-y {
+        0%,
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+        50% {
+            transform: translate3d(0, -10px, 0);
+        }
+    }
+
+    @keyframes hero-vortex-rotate {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes hero-beam-pulse {
+        0%,
+        100% {
+            opacity: 0.40;
+        }
+        50% {
+            opacity: 0.70;
+        }
+    }
+
+    .hero-waves-float {
+        animation: hero-float-y 7s ease-in-out infinite;
+        will-change: transform;
+    }
+
+    .hero-vortex-rotate {
+        animation: hero-vortex-rotate 6.5s linear infinite;
+        transform-box: fill-box;
+        transform-origin: center;
+        will-change: transform;
+    }
+
+    .hero-beam-pulse {
+        animation: hero-beam-pulse 2.2s ease-in-out infinite;
+    }
+}
