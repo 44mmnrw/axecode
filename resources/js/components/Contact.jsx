@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 function IconMail(props) {
   return (
@@ -46,22 +47,39 @@ export default function Contact() {
     email: '',
     message: ''
   });
+  const [status, setStatus] = useState({ loading: false, message: '', type: '' });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // TODO: Подключить реальную отправку (Laravel route/API).
-    setFormData({ name: '', email: '', message: '' });
+    setStatus({ loading: true, message: '', type: '' });
+
+    try {
+      const response = await axios.post('/api/contact', formData);
+      
+      setStatus({
+        loading: false,
+        message: response.data.message,
+        type: 'success'
+      });
+      setFormData({ name: '', email: '', message: '' });
+    } catch (error) {
+      setStatus({
+        loading: false,
+        message: error.response?.data?.message || 'Ошибка при отправке. Попробуйте позже.',
+        type: 'error'
+      });
+    }
   };
 
   const contactInfo = [
-    { Icon: IconMail, label: 'Email', value: 'hello@axecode.dev' },
-    { Icon: IconPhone, label: 'Телефон', value: '+7 (999) 123-45-67' },
-    { Icon: IconPin, label: 'Адрес', value: 'г. Москва, ул. Примерная, 123' }
+    { Icon: IconMail, label: 'Email', value: 'hello@axecode.tech' },
+    { Icon: IconPhone, label: 'Телефон', value: '+7 (495) 109-25-44' },
+    // { Icon: IconPin, label: 'Адрес', value: 'г. Москва, ул. Примерная, 123' }
   ];
 
   return (
@@ -117,6 +135,17 @@ export default function Contact() {
 
           {/* Right side - Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Status message */}
+            {status.message && (
+              <div className={`p-4 rounded-2xl border ${
+                status.type === 'success' 
+                  ? 'bg-green-500/10 border-green-500/30 text-green-300' 
+                  : 'bg-red-500/10 border-red-500/30 text-red-300'
+              }`}>
+                {status.message}
+              </div>
+            )}
+
             {/* Name field */}
             <div>
               <label className="block text-gray-300 font-semibold mb-2">Ваше имя</label>
@@ -162,10 +191,11 @@ export default function Contact() {
             {/* Submit button */}
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-300 hover:to-purple-500 text-white font-semibold py-3 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
+              disabled={status.loading}
+              className="w-full bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-300 hover:to-purple-500 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-70"
             >
               <IconSend className="h-5 w-5" />
-              Отправить сообщение
+              {status.loading ? 'Отправляю...' : 'Отправить сообщение'}
             </button>
           </form>
         </div>

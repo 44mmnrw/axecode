@@ -3,7 +3,7 @@ import React from 'react';
 const navLinks = [
   { label: 'Главная', href: '#home' },
   { label: 'Услуги', href: '#services' },
-  { label: 'Портфолио', href: '#portfolio' },
+  // { label: 'Портфолио', href: '#portfolio' },
   { label: 'О нас', href: '#about' },
   { label: 'Контакты', href: '#contact' },
 ];
