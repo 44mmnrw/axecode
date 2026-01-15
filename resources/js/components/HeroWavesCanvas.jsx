@@ -1,338 +1,252 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
 
-  useEffect(() => {
-    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
 
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setReduced(!!mq.matches);
-
-    update();
-
-    // Safari < 14
-    if (typeof mq.addEventListener === 'function') {
-      mq.addEventListener('change', update);
-      return () => mq.removeEventListener('change', update);
-    }
-
-    mq.addListener(update);
-    return () => mq.removeListener(update);
-  }, []);
-
-  return reduced;
-}
-
-function compileShader(gl, type, source) {
-  const shader = gl.createShader(type);
-  if (!shader) return null;
-
-  gl.shaderSource(shader, source);
-  gl.compileShader(shader);
-
-  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-    // eslint-disable-next-line no-console
-    console.warn('WebGL shader compile failed:', gl.getShaderInfoLog(shader));
-    gl.deleteShader(shader);
-    return null;
-  }
-
-  return shader;
-}
-
-function createProgram(gl, vsSource, fsSource) {
-  const vs = compileShader(gl, gl.VERTEX_SHADER, vsSource);
-  const fs = compileShader(gl, gl.FRAGMENT_SHADER, fsSource);
-  if (!vs || !fs) return null;
-
-  const program = gl.createProgram();
-  if (!program) return null;
-
-  gl.attachShader(program, vs);
-  gl.attachShader(program, fs);
-  gl.linkProgram(program);
-
-  gl.deleteShader(vs);
-  gl.deleteShader(fs);
-
-  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-    // eslint-disable-next-line no-console
-    console.warn('WebGL program link failed:', gl.getProgramInfoLog(program));
-    gl.deleteProgram(program);
-    return null;
-  }
-
-  return program;
-}
-
-/**
- * Canvas/WebGL волны, вдохновлённые эффектом figma.site (процедурные линии + градиент).
- * Важно: если WebGL недоступен, просто верните fallback (SVG/ничего).
- */
 export default function HeroWavesCanvas({
   height = 420,
   opacity = 0.95,
   speed = 1.2,
-  lineCount = 12,
+  lineCount = 8,
   amplitude = 0.18,
   yOffset = 0.15,
   fallback = null,
 }) {
-  const containerRef = useRef(null);
   const canvasRef = useRef(null);
-  const rafRef = useRef(0);
-  const startRef = useRef(0);
+  const animationFrameRef = useRef(null);
+  const startTimeRef = useRef(Date.now());
+  const glRef = useRef(null);
+  const programRef = useRef(null);
+  const uniformLocationsRef = useRef({});
 
-  const [supported, setSupported] = useState(true);
-  const prefersReducedMotion = usePrefersReducedMotion();
-
-  const shaders = useMemo(() => {
-    const vs = `
-attribute vec2 aPosition;
-varying vec2 vUv;
-void main() {
-  vUv = aPosition * 0.5 + 0.5;
-  gl_Position = vec4(aPosition, 0.0, 1.0);
-}
-`;
-
-    // WebGL1 fragment shader (gl_FragColor)
-    const fs = `
-precision mediump float;
-
-uniform vec2 iResolution;
-uniform float iTime;
-uniform float uSpeed;
-uniform float uLineCount;
-uniform float uAmplitude;
-uniform float uYOffset;
-
-varying vec2 vUv;
-
-vec3 grad(float t) {
-  vec3 c1 = vec3(0.325, 0.918, 0.992); // cyan
-  vec3 c2 = vec3(0.678, 0.275, 1.000); // purple
-  vec3 c3 = vec3(0.965, 0.200, 0.604); // pink
-  if (t < 0.5) return mix(c1, c2, t / 0.5);
-  return mix(c2, c3, (t - 0.5) / 0.5);
-}
-
-float sdSegment(vec2 p, vec2 a, vec2 b) {
-  vec2 pa = p - a;
-  vec2 ba = b - a;
-  float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0);
-  return length(pa - ba * h);
-}
-
-float waveLine(vec2 uv, float idx, float count, float t) {
-  float n = (idx + 1.0) / (count + 1.0);
-
-  // Раскладка линий по высоте (ниже = плотнее/ярче)
-  float baseY = mix(0.58, 0.86, n) + (uYOffset - 0.15) * 0.25;
-
-  float freq = mix(1.25, 2.75, n);
-  float phase = idx * 0.55;
-  float amp = uAmplitude * mix(0.14, 1.0, n);
-
-  float y = baseY + sin((uv.x * 6.28318 * freq) + (t * uSpeed) + phase) * amp;
-  float d = abs(uv.y - y);
-
-  float width = mix(0.0018, 0.0032, 1.0 - n);
-  float core = smoothstep(width, 0.0, d);
-  float glow = smoothstep(width * 6.0, 0.0, d) * 0.55;
-
-  return core + glow;
-}
-
-float vortex(vec2 uv, float t) {
-  // Точка вихря справа
-  vec2 c = vec2(0.915, 0.62);
-  vec2 p = uv - c;
-
-  float r = length(p);
-  float a = atan(p.y, p.x);
-
-  // Вращение колец
-  float spin = a + t * 0.55;
-  float rings = 0.5 + 0.5 * sin(spin * 10.0 - r * 42.0);
-
-  float falloff = smoothstep(0.22, 0.0, r);
-  return rings * falloff;
-}
-
-void main() {
-  vec2 uv = vUv;
-  float t = iTime;
-
-  float count = clamp(uLineCount, 1.0, 20.0);
-
-  float intensity = 0.0;
-  for (int i = 0; i < 20; i++) {
-    float fi = float(i);
-    if (fi >= count) {
-      break;
+  // Vertex shader
+  const vertexShaderSource = `
+    attribute vec2 a_position;
+    void main() {
+      gl_Position = vec4(a_position, 0, 1);
     }
-    intensity += waveLine(uv, fi, count, t);
-  }
+  `;
 
-  // Луч/переход к вихрю
-  float beam = 1.0 - smoothstep(0.006, 0.030, sdSegment(uv, vec2(0.62, 0.62), vec2(0.92, 0.62)));
-  beam *= smoothstep(0.55, 0.80, uv.x);
+  // Fragment shader - луч + волны, вращающиеся вокруг оси
+  const fragmentShaderSource = `
+    precision mediump float;
+    uniform vec2 iResolution;
+    uniform float iTime;
+    uniform float uSpeed;
+    uniform float uLineCount;
+    uniform float uAmplitude;
+    uniform float uYOffset;
 
-  float v = vortex(uv, t);
+    const float MAX_LINES = 20.0;
 
-  // Фейды (в рефе волны «живут» внизу)
-  float fadeTop = smoothstep(0.35, 0.60, uv.y);
-  float fadeBottom = smoothstep(1.05, 0.70, uv.y);
-  float fade = fadeTop * fadeBottom;
+    // Create a wavy line (0.0 black, 1.0 white)
+    float wave(vec2 uv, float speed, float yPos, float thickness, float softness) {
+      float falloff = smoothstep(1.0, 0.5, abs(uv.x));
+      float y = falloff * sin(iTime * speed + uv.x * 10.0) * yPos - uYOffset;
+      return 1.0 - smoothstep(thickness, thickness + softness + falloff * 0.0, abs(uv.y - y));
+    }
 
-  float aOut = clamp((intensity * 0.35 + v * 0.8 + beam * 0.9) * fade, 0.0, 1.0);
+    void main() {
+      vec2 uv = gl_FragCoord.xy / iResolution.y;
+      vec4 col = vec4(0.0, 0.0, 0.0, 1.0);
 
-  vec3 col = grad(uv.x);
-  // Добавим «белую» сердцевину для луча/вихря
-  col = mix(col, vec3(1.0), clamp(beam * 0.35 + v * 0.30, 0.0, 1.0));
+      // Center uv coords
+      uv -= 0.5;
+      // Смещение луча по вертикали
+      uv.y -= 0.01;
+      
+      // Wave colors: cyan to pink gradient
+      const vec3 col1 = vec3(0.325, 0.918, 0.992); // cyan
+      const vec3 col2 = vec3(0.965, 0.200, 0.604); // pink
 
-  vec3 rgb = col * aOut;
-  gl_FragColor = vec4(rgb, aOut);
-}
-`;
+      // Used to antialias the lines based on display pixel density
+      float aaDy = iResolution.y * 0.000005;
+      
+      for (float i = 0.0; i < MAX_LINES; i += 1.0) {
+        // Only process if within our desired line count
+        if (i <= uLineCount) {
+          float t = i / max(1.0, uLineCount - 1.0);
+          vec3 lineCol = mix(col1, col2, t);
+          float bokeh = pow(t, 3.0);
+          float thickness = 0.003;
+          float softness = aaDy + bokeh * 0.2;
+          float amp = uAmplitude - 0.05 * t;
+          float amt = max(0.0, pow(1.0 - bokeh, 2.0) * 0.9);
+          col.xyz += wave(uv, uSpeed * (1.0 + t), amp, thickness, softness) * lineCol * amt;
+        }
+      }
 
-    return { vs, fs };
-  }, []);
+      // Fade at top and bottom
+      float fadeTop = smoothstep(-0.35, -0.1, uv.y);
+      float fadeBot = smoothstep(0.4, 0.1, uv.y);
+      col.a *= fadeTop * fadeBot;
 
-  useEffect(() => {
-    const container = containerRef.current;
+      gl_FragColor = col;
+    }
+  `;
+
+  // Initialize WebGL
+  const initWebGL = () => {
     const canvas = canvasRef.current;
+    if (!canvas) return false;
 
-    if (!container || !canvas) return;
-
-    let gl = null;
-
-    try {
-      gl = canvas.getContext('webgl', {
-        alpha: true,
-        antialias: true,
-        depth: false,
-        stencil: false,
-        premultipliedAlpha: true,
-        preserveDrawingBuffer: false,
-      });
-    } catch {
-      gl = null;
-    }
-
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
     if (!gl) {
-      setSupported(false);
-      return;
+      console.error('WebGL not supported');
+      return false;
+    }
+    glRef.current = gl;
+
+    // Compile vertex shader
+    const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    if (!vertexShader) return false;
+    gl.shaderSource(vertexShader, vertexShaderSource);
+    gl.compileShader(vertexShader);
+
+    if (!gl.getShaderParameter(vertexShader, gl.COMPILE_STATUS)) {
+      console.error('Vertex shader error:', gl.getShaderInfoLog(vertexShader));
+      return false;
     }
 
-    const program = createProgram(gl, shaders.vs, shaders.fs);
-    if (!program) {
-      setSupported(false);
-      return;
+    // Compile fragment shader
+    const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    if (!fragmentShader) return false;
+    gl.shaderSource(fragmentShader, fragmentShaderSource);
+    gl.compileShader(fragmentShader);
+
+    if (!gl.getShaderParameter(fragmentShader, gl.COMPILE_STATUS)) {
+      console.error('Fragment shader error:', gl.getShaderInfoLog(fragmentShader));
+      return false;
     }
 
-    const aPosition = gl.getAttribLocation(program, 'aPosition');
+    // Link program
+    const program = gl.createProgram();
+    if (!program) return false;
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
 
-    const uResolution = gl.getUniformLocation(program, 'iResolution');
-    const uTime = gl.getUniformLocation(program, 'iTime');
-    const uSpeed = gl.getUniformLocation(program, 'uSpeed');
-    const uLineCount = gl.getUniformLocation(program, 'uLineCount');
-    const uAmplitude = gl.getUniformLocation(program, 'uAmplitude');
-    const uYOffset = gl.getUniformLocation(program, 'uYOffset');
-
-    const buffer = gl.createBuffer();
-    if (!buffer) {
-      gl.deleteProgram(program);
-      setSupported(false);
-      return;
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error('Program link error:', gl.getProgramInfoLog(program));
+      return false;
     }
-
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    // Fullscreen quad: 2 triangles
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array([
-        -1, -1,
-        1, -1,
-        -1, 1,
-        -1, 1,
-        1, -1,
-        1, 1,
-      ]),
-      gl.STATIC_DRAW
-    );
 
     gl.useProgram(program);
-    gl.enableVertexAttribArray(aPosition);
-    gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
+    programRef.current = program;
 
+    // Create buffer
+    const positionBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    const positions = [-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1];
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+
+    // Setup attributes
+    const positionAttributeLocation = gl.getAttribLocation(program, 'a_position');
+    gl.enableVertexAttribArray(positionAttributeLocation);
+    gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
+
+    // WebGL settings
     gl.disable(gl.DEPTH_TEST);
     gl.disable(gl.CULL_FACE);
     gl.clearColor(0, 0, 0, 0);
 
-    const resize = () => {
-      const rect = container.getBoundingClientRect();
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-      const w = Math.max(1, Math.floor(rect.width * dpr));
-      const h = Math.max(1, Math.floor(rect.height * dpr));
-
-      if (canvas.width !== w || canvas.height !== h) {
-        canvas.width = w;
-        canvas.height = h;
-      }
-
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      if (uResolution) gl.uniform2f(uResolution, canvas.width, canvas.height);
+    // Save uniform locations
+    uniformLocationsRef.current = {
+      iResolution: gl.getUniformLocation(program, 'iResolution'),
+      iTime: gl.getUniformLocation(program, 'iTime'),
+      uSpeed: gl.getUniformLocation(program, 'uSpeed'),
+      uLineCount: gl.getUniformLocation(program, 'uLineCount'),
+      uAmplitude: gl.getUniformLocation(program, 'uAmplitude'),
+      uYOffset: gl.getUniformLocation(program, 'uYOffset'),
     };
 
-    resize();
+    return true;
+  };
 
-    const ro = new ResizeObserver(() => resize());
-    ro.observe(container);
+  // Handle resize
+  const handleResize = () => {
+    const canvas = canvasRef.current;
+    const gl = glRef.current;
 
-    startRef.current = performance.now();
+    if (!canvas || !gl) return;
 
-    const draw = () => {
-      const now = performance.now();
-      const t = prefersReducedMotion ? 0.0 : (now - startRef.current) / 1000.0;
+    const displayWidth = canvas.clientWidth;
+    const displayHeight = canvas.clientHeight;
 
-      gl.clear(gl.COLOR_BUFFER_BIT);
+    if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
+      canvas.width = displayWidth;
+      canvas.height = displayHeight;
+      gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+    }
+  };
 
-      if (uTime) gl.uniform1f(uTime, t);
-      if (uSpeed) gl.uniform1f(uSpeed, speed);
-      if (uLineCount) gl.uniform1f(uLineCount, lineCount);
-      if (uAmplitude) gl.uniform1f(uAmplitude, amplitude);
-      if (uYOffset) gl.uniform1f(uYOffset, yOffset);
+  // Render loop
+  const render = () => {
+    const gl = glRef.current;
+    const program = programRef.current;
+    const uniforms = uniformLocationsRef.current;
 
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
+    if (!gl || !program) return;
 
-      if (!prefersReducedMotion) {
-        rafRef.current = requestAnimationFrame(draw);
-      }
-    };
+    const currentTime = Date.now();
+    const elapsedTime = (currentTime - startTimeRef.current) / 1000;
 
-    draw();
+    gl.clear(gl.COLOR_BUFFER_BIT);
 
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-      ro.disconnect();
-      gl.bindBuffer(gl.ARRAY_BUFFER, null);
-      gl.deleteBuffer(buffer);
-      gl.useProgram(null);
-      gl.deleteProgram(program);
-    };
-  }, [amplitude, lineCount, prefersReducedMotion, shaders.fs, shaders.vs, speed, yOffset]);
+    if (uniforms.iResolution) {
+      gl.uniform2f(uniforms.iResolution, gl.canvas.width, gl.canvas.height);
+    }
+    if (uniforms.iTime) {
+      gl.uniform1f(uniforms.iTime, elapsedTime);
+    }
+    if (uniforms.uSpeed) {
+      gl.uniform1f(uniforms.uSpeed, speed);
+    }
+    if (uniforms.uLineCount) {
+      gl.uniform1f(uniforms.uLineCount, lineCount);
+    }
+    if (uniforms.uAmplitude) {
+      gl.uniform1f(uniforms.uAmplitude, amplitude);
+    }
+    if (uniforms.uYOffset) {
+      gl.uniform1f(uniforms.uYOffset, yOffset);
+    }
 
-  if (!supported) return fallback;
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    animationFrameRef.current = requestAnimationFrame(render);
+  };
+
+  useEffect(() => {
+    if (initWebGL()) {
+      handleResize();
+      render();
+
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        if (animationFrameRef.current) {
+          cancelAnimationFrame(animationFrameRef.current);
+        }
+      };
+    }
+  }, []);
+
+  // Update uniforms
+  useEffect(() => {
+    const gl = glRef.current;
+    const uniforms = uniformLocationsRef.current;
+
+    if (gl) {
+      if (uniforms.uSpeed) gl.uniform1f(uniforms.uSpeed, speed);
+      if (uniforms.uLineCount) gl.uniform1f(uniforms.uLineCount, lineCount);
+      if (uniforms.uYOffset) gl.uniform1f(uniforms.uYOffset, yOffset);
+      if (uniforms.uAmplitude) gl.uniform1f(uniforms.uAmplitude, amplitude);
+    }
+  }, [speed, lineCount, amplitude, yOffset]);
 
   return (
     <div
-      ref={containerRef}
-      className="pointer-events-none absolute inset-x-0 bottom-0 z-0 overflow-hidden"
-      style={{ height }}
+      className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
       aria-hidden="true"
     >
       <canvas
@@ -345,7 +259,7 @@ void main() {
         }}
       />
 
-      {/* Подсветка/фейд к низу (как в текущей версии) */}
+      {/* Fade gradient to background */}
       <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-[#020618] to-transparent" />
     </div>
   );

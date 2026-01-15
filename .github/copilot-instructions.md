@@ -30,6 +30,45 @@
 ## Если добавляешь новые маршруты
 - Сейчас зарегистрирован только web routing (`routes/web.php`). Если нужен отдельный набор API-роутов, его придётся явно подключить в `bootstrap/app.php` (по аналогии с `web:`).
 
+## Production deployment (на сервер)
+
+### Сервер и инфраструктура
+- **IP**: 212.113.120.197
+- **Домен**: axecode.tech
+- **Путь на сервере**: `/var/www/axecode_tech_usr/data/www/axecode.tech/`
+- **Веб-сервер**: Nginx
+- **PHP**: PHP 8.3 с PHP-FPM (Unix socket: `/var/run/php-fpm-axecode.sock`)
+- **БД**: SQLite (`database/database.sqlite`, должна быть writable: `chmod 666 database/database.sqlite`)
+- **GitHub репо**: `https://github.com/44mmnrw/axecode.git`
+
+### Процесс деплоя
+1. **Локальная сборка**: `npm run build` (создаёт `public/build/`)
+2. **Коммит в GitHub**: 
+   ```bash
+   git add .
+   git commit -m "Описание изменений"
+   git push origin main
+   ```
+3. **На сервере** (SSH в `/var/www/axecode_tech_usr/data/www/axecode.tech/`):
+   ```bash
+   git pull origin main
+   /opt/php83/bin/php /usr/local/bin/composer install
+   /opt/php83/bin/php artisan migrate --force
+   ```
+4. **Перезагрузка PHP-FPM** (если менялась конфигурация):
+   ```bash
+   kill -USR2 <php-fpm-pid>
+   ```
+
+### Автоматический деплой (webhook)
+TODO: Настроить GitHub webhook для автоматического pull и migrate при push в main ветку.
+
+### Окружение (production .env)
+- `APP_ENV=production`
+- `APP_DEBUG=false` (обязательно в продакшене)
+- `HTTPS_REDIRECT=true` (когда будет SSL)
+- Все остальные ключи как в `.env.example`
+
 ## Примеры файлов для ориентира
 - Blade-шаблон SPA: `resources/views/app.blade.php`
 - Точка входа React: `resources/js/app.jsx`
