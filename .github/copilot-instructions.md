@@ -41,24 +41,35 @@
 - **БД**: SQLite (`database/database.sqlite`, должна быть writable: `chmod 666 database/database.sqlite`)
 - **GitHub репо**: `https://github.com/44mmnrw/axecode.git`
 
-### Процесс деплоя
-1. **Локальная сборка**: `npm run build` (создаёт `public/build/`)
-2. **Коммит в GitHub**: 
+### Процесс деплоя (для изменений React/JS)
+
+**Внимание**: На сервере нет Node.js, поэтому ассеты собираются локально и коммитятся в гит.
+
+1. **Локально**:
    ```bash
-   git add .
+   npm run build                    # Собрать ассеты в public/build/
+   git add public/build .gitignore  # Убедись, что /public/build НЕ в .gitignore
+   git add .                        # Добавить все изменения
    git commit -m "Описание изменений"
    git push origin main
    ```
-3. **На сервере** (SSH в `/var/www/axecode_tech_usr/data/www/axecode.tech/`):
+
+2. **На сервере** (SSH в `/var/www/axecode_tech_usr/data/www/axecode.tech/`):
    ```bash
    git pull origin main
    /opt/php83/bin/php /usr/local/bin/composer install
    /opt/php83/bin/php artisan migrate --force
    ```
-4. **Перезагрузка PHP-FPM** (если менялась конфигурация):
+
+3. **Перезагрузка PHP-FPM** (если менялась конфигурация):
    ```bash
    kill -USR2 <php-fpm-pid>
    ```
+
+### Важное о public/build
+- `public/build/` содержит скомпилированные React ассеты, CSS и JS
+- **УБЕДИСЬ**: в `.gitignore` строка `/public/build` должна быть **удалена** (чтобы ассеты попадали в гит)
+- После `npm run build` локально, коммитишь папку целиком вместе с манифестом
 
 ### Автоматический деплой (webhook)
 TODO: Настроить GitHub webhook для автоматического pull и migrate при push в main ветку.
