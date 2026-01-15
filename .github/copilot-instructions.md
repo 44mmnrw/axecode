@@ -59,6 +59,7 @@
    git pull origin main
    /opt/php83/bin/php /usr/local/bin/composer install
    /opt/php83/bin/php artisan migrate --force
+   /opt/php83/bin/php artisan db:seed --class=AdminSeeder
    ```
 
 3. **Перезагрузка PHP-FPM** (если менялась конфигурация):
