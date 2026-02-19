@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ContactMessage;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -18,5 +19,28 @@ class AdminController extends Controller
         $message = ContactMessage::findOrFail($id);
         $message->delete();
         return redirect()->route('admin.messages')->with('success', 'Сообщение удалено');
+    }
+
+    public function analyticsSettings()
+    {
+        $yandexId = Setting::get('yandex_metrika_id');
+        $googleId  = Setting::get('google_analytics_id');
+        return view('admin.analytics', compact('yandexId', 'googleId'));
+    }
+
+    public function saveAnalyticsSettings(Request $request)
+    {
+        $request->validate([
+            'yandex_metrika_id'   => ['nullable', 'regex:/^\d{5,10}$/'],
+            'google_analytics_id' => ['nullable', 'regex:/^G-[A-Z0-9]{4,12}$/'],
+        ], [
+            'yandex_metrika_id.regex'   => 'ID Яндекс Метрики должен содержать только цифры (5–10 символов)',
+            'google_analytics_id.regex' => 'Google Measurement ID должен быть в формате G-XXXXXXXXXX',
+        ]);
+
+        Setting::set('yandex_metrika_id',   $request->input('yandex_metrika_id', ''));
+        Setting::set('google_analytics_id', $request->input('google_analytics_id', ''));
+
+        return redirect()->route('admin.analytics')->with('success', 'Настройки аналитики сохранены');
     }
 }

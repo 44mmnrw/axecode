@@ -29,6 +29,20 @@
             </div>
         </header>
 
+        <!-- Nav tabs -->
+        <div class="border-b border-white/5">
+            <div class="max-w-7xl mx-auto px-6 flex gap-6">
+                <a href="{{ route('admin.messages') }}"
+                   class="py-4 text-sm text-white border-b-2 border-indigo-500">
+                    Сообщения
+                </a>
+                <a href="{{ route('admin.analytics') }}"
+                   class="py-4 text-sm text-gray-400 hover:text-white transition border-b-2 border-transparent">
+                    Аналитика
+                </a>
+            </div>
+        </div>
+
         <!-- Main -->
         <main class="max-w-7xl mx-auto px-6 py-12">
             <!-- Success message -->

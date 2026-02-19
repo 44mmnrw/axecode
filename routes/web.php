@@ -21,4 +21,7 @@ Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logou
 Route::middleware('auth')->group(function () {
     Route::get('/admin/messages', [AdminController::class, 'messages'])->name('admin.messages');
     Route::delete('/admin/messages/{id}', [AdminController::class, 'deleteMessage'])->name('admin.messages.delete');
+
+    Route::get('/admin/analytics', [AdminController::class, 'analyticsSettings'])->name('admin.analytics');
+    Route::post('/admin/analytics', [AdminController::class, 'saveAnalyticsSettings'])->name('admin.analytics.save');
 });
