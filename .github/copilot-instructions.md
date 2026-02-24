@@ -57,9 +57,9 @@
    git pull origin main
    npm install
    npm run build
-   /opt/php83/bin/php /usr/local/bin/composer install --no-dev --optimize-autoloader
-   /opt/php83/bin/php artisan migrate --force
-   /opt/php83/bin/php artisan db:seed --class=AdminSeeder
+   /usr/bin/php8.3 /usr/local/bin/composer install --no-dev --optimize-autoloader
+   /usr/bin/php8.3 artisan migrate --force
+   /usr/bin/php8.3 artisan db:seed --class=AdminSeeder
    ```
 
 3. **Перезагрузка PHP-FPM** (если менялась конфигурация):
