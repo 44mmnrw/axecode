@@ -60,6 +60,8 @@
    /usr/bin/php8.3 /usr/local/bin/composer install --no-dev --optimize-autoloader
    /usr/bin/php8.3 artisan migrate --force
    /usr/bin/php8.3 artisan db:seed --class=AdminSeeder
+   /usr/bin/php8.3 artisan optimize:clear
+   /usr/bin/php8.3 artisan optimize
    ```
 
 3. **Перезагрузка PHP-FPM** (если менялась конфигурация):

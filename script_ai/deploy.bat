@@ -34,7 +34,7 @@ set DEPLOY_PATH=/var/www/axecode_tech_usr/data/www/axecode.tech
 set PHP=/usr/bin/php8.3
 set COMPOSER=/usr/local/bin/composer
 
-ssh %SERVER% "cd %DEPLOY_PATH% && git pull origin main && npm install --silent && npm run build && %PHP% %COMPOSER% install --no-dev --optimize-autoloader --quiet && %PHP% artisan migrate --force && echo DEPLOY_OK"
+ssh %SERVER% "cd %DEPLOY_PATH% && git pull origin main && npm install --silent && npm run build && %PHP% %COMPOSER% install --no-dev --optimize-autoloader --quiet && %PHP% artisan migrate --force && %PHP% artisan optimize:clear && %PHP% artisan optimize && echo DEPLOY_OK"
 
 if %errorlevel% neq 0 (
     echo.
