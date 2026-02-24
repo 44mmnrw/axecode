@@ -32,7 +32,6 @@
 
     {{-- ─── Preconnect (ускоряем загрузку внешних ресурсов) ──────────── --}}
     <link rel="preconnect" href="https://mc.yandex.ru">
-    <link rel="preconnect" href="https://www.googletagmanager.com">
 
     {{-- ─── Favicon ────────────────────────────────────────────────────── --}}
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
