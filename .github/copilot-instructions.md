@@ -33,7 +33,7 @@
 ## Production deployment (на сервер)
 
 ### Сервер и инфраструктура
-- **IP**: 212.113.120.197
+- **IP**: 85.239.57.126
 - **Домен**: axecode.tech
 - **Путь на сервере**: `/var/www/axecode_tech_usr/data/www/axecode.tech/`
 - **Веб-сервер**: Nginx
@@ -41,23 +41,23 @@
 - **БД**: SQLite (`database/database.sqlite`, должна быть writable: `chmod 666 database/database.sqlite`)
 - **GitHub репо**: `https://github.com/44mmnrw/axecode.git`
 
-### Процесс деплоя (для изменений React/JS)
+### Процесс деплоя
 
-**Внимание**: На сервере нет Node.js, поэтому ассеты собираются локально и коммитятся в гит.
+**Локально используется только dev-режим. Сборка ассетов (`npm run build`) выполняется на продакшн-сервере.**
 
-1. **Локально**:
+1. **Локально** — только закоммитить и запушить исходники:
    ```bash
-   npm run build                    # Собрать ассеты в public/build/
-   git add public/build .gitignore  # Убедись, что /public/build НЕ в .gitignore
-   git add .                        # Добавить все изменения
+   git add .
    git commit -m "Описание изменений"
    git push origin main
    ```
 
-2. **На сервере** (SSH в `/var/www/axecode_tech_usr/data/www/axecode.tech/`):
+2. **На сервере** (SSH в `/var/www/axecode_tech_usr/data/www/axecode.tech`):
    ```bash
    git pull origin main
-   /opt/php83/bin/php /usr/local/bin/composer install
+   npm install
+   npm run build
+   /opt/php83/bin/php /usr/local/bin/composer install --no-dev --optimize-autoloader
    /opt/php83/bin/php artisan migrate --force
    /opt/php83/bin/php artisan db:seed --class=AdminSeeder
    ```
@@ -68,9 +68,8 @@
    ```
 
 ### Важное о public/build
-- `public/build/` содержит скомпилированные React ассеты, CSS и JS
-- **УБЕДИСЬ**: в `.gitignore` строка `/public/build` должна быть **удалена** (чтобы ассеты попадали в гит)
-- После `npm run build` локально, коммитишь папку целиком вместе с манифестом
+- `public/build/` — результат `npm run build` на сервере, **не коммитится в гит**
+- `/public/build` должна быть в `.gitignore`
 
 ### Автоматический деплой (webhook)
 TODO: Настроить GitHub webhook для автоматического pull и migrate при push в main ветку.

@@ -1,2 +1,10 @@
 User-agent: *
-Disallow:
+Allow: /
+
+# Закрываем служебные разделы
+Disallow: /admin/
+Disallow: /auth/
+Disallow: /api/
+
+# Ссылка на карту сайта
+Sitemap: https://axecode.tech/sitemap.xml
