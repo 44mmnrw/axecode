@@ -37,6 +37,10 @@
                    class="py-4 text-sm text-white border-b-2 border-indigo-500">
                     Аналитика
                 </a>
+                <a href="{{ route('admin.privacy') }}"
+                   class="py-4 text-sm text-gray-400 hover:text-white transition border-b-2 border-transparent">
+                    Политика конфиденциальности
+                </a>
             </div>
         </div>
 

@@ -47,6 +47,7 @@ export default function Contact() {
     email: '',
     message: ''
   });
+  const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState({ loading: false, message: '', type: '' });
 
   const handleChange = (e) => {
@@ -67,6 +68,7 @@ export default function Contact() {
         type: 'success'
       });
       setFormData({ name: '', email: '', message: '' });
+      setConsent(false);
     } catch (error) {
       setStatus({
         loading: false,
@@ -188,10 +190,29 @@ export default function Contact() {
               />
             </div>
 
+            {/* Consent checkbox */}
+            <div className="flex items-start gap-3">
+              <input
+                type="checkbox"
+                id="consent"
+                checked={consent}
+                onChange={(e) => setConsent(e.target.checked)}
+                required
+                className="mt-1 h-4 w-4 rounded border-gray-600 bg-[rgba(15,23,43,0.5)] accent-cyan-400 cursor-pointer flex-shrink-0"
+              />
+              <label htmlFor="consent" className="text-sm text-gray-400 leading-relaxed cursor-pointer">
+                Я согласен с{' '}
+                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline underline-offset-2 hover:text-purple-400 transition-colors">
+                  политикой конфиденциальности
+                </a>
+                {' '}и даю согласие на обработку персональных данных
+              </label>
+            </div>
+
             {/* Submit button */}
             <button
               type="submit"
-              disabled={status.loading}
+              disabled={status.loading || !consent}
               className="w-full bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-300 hover:to-purple-500 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-3 rounded-2xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-70"
             >
               <IconSend className="h-5 w-5" />

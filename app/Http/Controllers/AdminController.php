@@ -43,4 +43,21 @@ class AdminController extends Controller
 
         return redirect()->route('admin.analytics')->with('success', 'Настройки аналитики сохранены');
     }
+
+    public function privacyPage()
+    {
+        $content = Setting::get('privacy_policy');
+        return view('admin.privacy', compact('content'));
+    }
+
+    public function savePrivacyPage(Request $request)
+    {
+        $request->validate([
+            'privacy_policy' => ['nullable', 'string', 'max:100000'],
+        ]);
+
+        Setting::set('privacy_policy', $request->input('privacy_policy', ''));
+
+        return redirect()->route('admin.privacy')->with('success', 'Политика конфиденциальности сохранена');
+    }
 }

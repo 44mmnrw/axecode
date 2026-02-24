@@ -9,6 +9,11 @@ Route::get('/', function () {
     return view('app');
 });
 
+// Политика конфиденциальности
+Route::get('/privacy', function () {
+    return view('privacy');
+});
+
 // Sitemap
 Route::get('/sitemap.xml', function () {
     $url = config('app.url');
@@ -21,6 +26,12 @@ Route::get('/sitemap.xml', function () {
         .   '<lastmod>' . $lastmod . '</lastmod>'
         .   '<changefreq>weekly</changefreq>'
         .   '<priority>1.0</priority>'
+        . '</url>'
+        . '<url>'
+        .   '<loc>' . $url . '/privacy</loc>'
+        .   '<lastmod>' . $lastmod . '</lastmod>'
+        .   '<changefreq>yearly</changefreq>'
+        .   '<priority>0.3</priority>'
         . '</url>'
         . '</urlset>';
 
@@ -42,4 +53,7 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/admin/analytics', [AdminController::class, 'analyticsSettings'])->name('admin.analytics');
     Route::post('/admin/analytics', [AdminController::class, 'saveAnalyticsSettings'])->name('admin.analytics.save');
+
+    Route::get('/admin/privacy', [AdminController::class, 'privacyPage'])->name('admin.privacy');
+    Route::post('/admin/privacy', [AdminController::class, 'savePrivacyPage'])->name('admin.privacy.save');
 });
