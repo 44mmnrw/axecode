@@ -129,16 +129,14 @@ export default function About() {
             <h2 className="text-2xl font-bold text-white">Наш процесс работы</h2>
           </div>
 
-          <div className="grid grid-cols-4 gap-6">
-            {process.map((step, i) => (
-              <div key={i} className="relative">
-                {/* Connection line */}
-                {i < process.length - 1 && (
-                  <div className="absolute top-8 left-[60%] right-[-50%] h-0.5 bg-gradient-to-r from-cyan-500/50 to-purple-500/50" />
-                )}
+          <div className="relative grid grid-cols-4 gap-6">
+            {/* Single connector line from center of first to center of last circle */}
+            <div className="absolute top-8 left-[12.5%] right-[12.5%] h-0.5 bg-gradient-to-r from-cyan-500/50 via-purple-500/50 to-purple-500/50" />
 
+            {process.map((step, i) => (
+              <div key={i} className="flex flex-col items-center">
                 {/* Circle number */}
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center mb-4 relative z-10">
+                <div className="relative z-10 w-16 h-16 rounded-full bg-gradient-to-br from-cyan-400 to-purple-600 flex items-center justify-center mb-4">
                   <span className="text-white font-bold text-lg">{step.number}</span>
                 </div>
 
