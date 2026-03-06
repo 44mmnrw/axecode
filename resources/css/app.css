@@ -62,4 +62,14 @@
     .hero-beam-pulse {
         animation: hero-beam-pulse 2.2s ease-in-out infinite;
     }
+
+    /* Filament: Privacy Editor.js tweaks */
+    #privacy-editor .codex-editor__redactor {
+        padding-bottom: 1rem !important;
+    }
+
+    #privacy-editor .ce-block__content,
+    #privacy-editor .ce-toolbar__content {
+        max-width: 100%;
+    }
 }

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru" prefix="og: https://ogp.me/ns#">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Разработка веб-приложений под ключ — Axecode</title>
+    <meta name="description" content="Разработка веб-приложений под ключ: личные кабинеты, CRM, SaaS и B2B-порталы. Полный цикл от аналитики и UX до релиза и поддержки.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ config('app.url') }}/razrabotka-veb-prilozheniy">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ config('app.url') }}/razrabotka-veb-prilozheniy">
+    <meta property="og:title" content="Разработка веб-приложений под ключ — Axecode">
+    <meta property="og:description" content="Создаём веб-приложения для бизнеса: CRM, личные кабинеты, SaaS и внутренние корпоративные системы.">
+    <meta property="og:image" content="{{ config('app.url') }}/og-image.png">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Разработка веб-приложений под ключ — Axecode">
+    <meta name="twitter:description" content="Веб-приложения для автоматизации бизнеса: от проектирования до запуска и развития.">
+    <meta name="twitter:image" content="{{ config('app.url') }}/og-image.png">
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#020618">
+    <meta name="msapplication-TileColor" content="#020618">
+    <meta name="msapplication-config" content="/browserconfig.xml">
+
+    @vite(['resources/css/app.css'])
+
+    @php
+        $baseUrl = config('app.url');
+        $jsonLd = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'Service',
+                    'name' => 'Разработка веб-приложений под ключ',
+                    'serviceType' => 'Web application development',
+                    'provider' => [
+                        '@type' => 'Organization',
+                        'name' => 'Axecode',
+                        'url' => $baseUrl,
+                    ],
+                    'areaServed' => 'RU',
+                    'url' => $baseUrl . '/razrabotka-veb-prilozheniy',
+                    'description' => 'Разработка веб-приложений для бизнеса: CRM, SaaS, личные кабинеты, B2B/B2C порталы.',
+                ],
+            ],
+        ];
+    @endphp
+    <script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
+</head>
+<body class="min-h-screen bg-[#020618] text-white antialiased">
+<header class="sticky top-0 z-50 border-b border-white/5 bg-[rgba(2,6,24,0.85)] backdrop-blur-md">
+    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+        <a href="/" class="text-lg font-bold bg-gradient-to-r from-[#00d3f2] via-purple-400 to-pink-400 bg-clip-text text-transparent">Axecode</a>
+        <a href="/#contact" class="text-sm text-cyan-300 hover:text-white transition-colors">Обсудить проект</a>
+    </div>
+</header>
+
+<main>
+    <section class="relative overflow-hidden py-20">
+        <div class="absolute -top-20 right-1/4 h-72 w-72 rounded-full bg-purple-500/10 blur-3xl"></div>
+        <div class="mx-auto max-w-6xl px-6">
+            <p class="text-cyan-300 text-sm mb-4">Услуги Axecode</p>
+            <h1 class="text-4xl md:text-5xl font-bold leading-tight max-w-4xl">Разработка веб-приложений под ключ</h1>
+            <p class="text-gray-300 text-lg mt-6 max-w-3xl">
+                Разрабатываем веб-приложения, которые автоматизируют процессы и масштабируют бизнес:
+                CRM, личные кабинеты, SaaS-продукты, клиентские и внутренние порталы.
+            </p>
+        </div>
+    </section>
+
+    <section class="py-16 border-t border-white/5">
+        <div class="mx-auto max-w-6xl px-6">
+            <h2 class="text-2xl font-semibold mb-8">Типы проектов</h2>
+            <div class="grid md:grid-cols-2 gap-5">
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-6">CRM и автоматизация продаж</div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-6">Личные кабинеты клиентов и партнёров</div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-6">SaaS и подписочные сервисы</div>
+                <div class="rounded-2xl border border-white/10 bg-white/5 p-6">B2B/B2C веб-платформы</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-16 border-t border-white/5">
+        <div class="mx-auto max-w-6xl px-6">
+            <h2 class="text-2xl font-semibold mb-8">Стек и подход</h2>
+            <p class="text-gray-300 leading-relaxed max-w-4xl">
+                Используем современный стек (Laravel, React, API-first архитектура), проектируем масштабируемую
+                структуру, покрываем бизнес-логику, интеграции, роли/права, аналитику и поддержку после релиза.
+            </p>
+        </div>
+    </section>
+
+    <section class="py-20 border-t border-white/5">
+        <div class="mx-auto max-w-4xl px-6 text-center">
+            <h2 class="text-3xl font-bold">Нужна оценка веб-приложения?</h2>
+            <p class="text-gray-300 mt-4">Подготовим архитектуру, roadmap и ориентир по срокам/бюджету.</p>
+            <a href="/#contact" class="inline-block mt-8 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 px-8 py-3 font-semibold text-white hover:from-cyan-300 hover:to-purple-500 transition-all">Получить оценку</a>
+        </div>
+    </section>
+
+    <section class="py-16 border-t border-white/5">
+        <div class="mx-auto max-w-6xl px-6">
+            <h2 class="text-2xl font-semibold mb-6">Смотрите также</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <a href="/razrabotka-saitov-pod-klyuch" class="rounded-2xl border border-white/10 p-5 hover:border-cyan-400/60 transition-colors">
+                    Разработка сайтов под ключ →
+                </a>
+                <a href="/razrabotka-mobilnyh-prilozheniy" class="rounded-2xl border border-white/10 p-5 hover:border-cyan-400/60 transition-colors">
+                    Разработка мобильных приложений iOS и Android →
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

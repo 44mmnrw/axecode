@@ -13,25 +13,34 @@ function ExternalLinkIcon(props) {
 const projects = [
   {
     accent: 'from-cyan-500/30 to-blue-600/20',
-    category: 'Веб-разработка',
-    title: 'Корпоративный сайт TechCorp',
-    description: 'Современный корпоративный сайт с адаптивным дизайном и интеграцией CMS',
-    tags: ['React', 'Next.js', 'CMS']
+    category: 'Веб-приложение',
+    title: 'NRW Group — 3D Cabinet Configurator',
+    description: 'Интеллектуальный конфигуратор шкафного оборудования: автоматический расчет параметров, 3D-визуализация и генерация документации.',
+    tags: ['Конфигуратор', '3D-визуализация', 'Автоматизация'],
+    url: 'https://nrwgroup.ru/',
+    image: '/nrw.png',
+    imageAlt: 'NRW Group — интерфейс конфигуратора шкафного оборудования'
   },
   {
     accent: 'from-purple-500/30 to-pink-600/20',
-    category: 'Мобильная разработка',
-    title: 'Мобильное приложение FitTracker',
-    description: 'iOS и Android приложение для отслеживания фитнес-активности',
-    tags: ['React Native', 'Firebase', 'UI/UX']
+    category: 'Веб-разработка',
+    title: 'ФК Арсенал Дзержинск — официальный сайт',
+    description: 'Сайт футбольного клуба с блоками ближайших матчей, результатами, турнирной таблицей, новостями и разделом партнёров.',
+    tags: ['WordPress', 'Спортивный сайт', 'Новости'],
+    url: 'https://arsenal.axecode.tech/',
+    image: '/arsenal.png',
+    imageAlt: 'ФК Арсенал Дзержинск — главная страница сайта'
   },
   {
     accent: 'from-emerald-500/25 to-cyan-500/15',
-    category: 'Веб-разработка',
-    title: 'E-commerce платформа ShopFlow',
-    description: 'Масштабируемая платформа для онлайн-торговли с системой платежей',
-    tags: ['Node.js', 'PostgreSQL', 'Stripe']
+    category: 'Корпоративная система',
+    title: 'HR Assessment Platform',
+    description: 'Закрытая корпоративная платформа для психологического тестирования и оценки персонала: каталог тестов, трекинг прохождения и история результатов.',
+    tags: ['HR Tech', 'Оценка персонала', 'Закрытый контур'],
+    image: '/test.png',
+    imageAlt: 'PTG HR Assessment Platform — экран личного кабинета с тестами'
   },
+  /*
   {
     accent: 'from-fuchsia-500/25 to-purple-600/15',
     category: 'Веб-приложение',
@@ -53,6 +62,7 @@ const projects = [
     description: 'Платформа для общения и обмена контентом в реальном времени',
     tags: ['Vue.js', 'WebSocket', 'MongoDB']
   }
+  */
 ];
 
 const filterOptions = ['Все проекты', 'Веб-разработка', 'Мобильная разработка', 'Веб-приложение'];
@@ -74,9 +84,12 @@ export default function Portfolio() {
         {/* Header */}
         <div className="text-center mb-16">
           <h2 className="text-xl bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent mb-4">
-            Портфолио
+            Портфолио: разработка сайтов и мобильных приложений
           </h2>
-          <p className="text-gray-400 text-lg">Наши лучшие проекты, которыми мы гордимся</p>
+          <p className="text-gray-400 text-lg max-w-3xl mx-auto">
+            Реализуем проекты под ключ: корпоративные сайты, веб-приложения, e-commerce и мобильные
+            приложения для iOS и Android.
+          </p>
         </div>
 
         {/* Filter buttons */}
@@ -105,17 +118,38 @@ export default function Portfolio() {
             >
               {/* Image */}
               <div className="relative overflow-hidden h-48 bg-gray-900">
+                {project.image ? (
+                  <img
+                    src={project.image}
+                    alt={project.imageAlt ?? project.title}
+                    className="absolute inset-0 h-full w-full object-contain bg-[#0b1220] p-2 transition-transform duration-500 group-hover:scale-[1.01]"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : null}
                 <div className={`absolute inset-0 bg-gradient-to-br ${project.accent}`} />
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0)_60%)]" />
+                <div className={`absolute inset-0 ${project.image ? 'bg-black/25' : 'bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.12)_0%,rgba(255,255,255,0)_60%)]'}`} />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 <div className="absolute bottom-4 left-4">
                   <div className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-xs text-white/80 backdrop-blur-sm">
                     Превью
                   </div>
                 </div>
-                <div className="absolute top-4 right-4 rounded-lg bg-black/60 p-2 backdrop-blur-sm">
-                  <ExternalLinkIcon className="h-5 w-5 text-white/90" />
-                </div>
+                {project.url ? (
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={`Открыть проект: ${project.title}`}
+                    className="absolute top-4 right-4 rounded-lg bg-black/60 p-2 backdrop-blur-sm transition-colors hover:bg-black/80"
+                  >
+                    <ExternalLinkIcon className="h-5 w-5 text-white/90" />
+                  </a>
+                ) : (
+                  <div className="absolute top-4 right-4 rounded-lg bg-black/40 p-2 backdrop-blur-sm">
+                    <ExternalLinkIcon className="h-5 w-5 text-white/70" />
+                  </div>
+                )}
               </div>
 
               {/* Content */}
@@ -148,15 +182,23 @@ export default function Portfolio() {
                 </div>
 
                 {/* Link */}
-                <a
-                  href="#"
-                  className="text-cyan-400 hover:text-cyan-300 font-semibold text-sm flex items-center gap-2 transition-colors"
-                >
-                  Посмотреть проект
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </a>
+                {project.url ? (
+                  <a
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-cyan-400 hover:text-cyan-300 font-semibold text-sm flex items-center gap-2 transition-colors"
+                  >
+                    Посмотреть проект
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </a>
+                ) : (
+                  <span className="text-gray-500 font-semibold text-sm">
+                    Закрытая корпоративная система
+                  </span>
+                )}
               </div>
             </div>
           ))}

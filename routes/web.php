@@ -2,8 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
     return view('app');
@@ -12,6 +10,21 @@ Route::get('/', function () {
 // Политика конфиденциальности
 Route::get('/privacy', function () {
     return view('privacy');
+});
+
+// SEO посадочная: разработка сайтов
+Route::get('/razrabotka-saitov-pod-klyuch', function () {
+    return view('landing.site-development');
+});
+
+// SEO посадочная: веб-приложения
+Route::get('/razrabotka-veb-prilozheniy', function () {
+    return view('landing.web-app-development');
+});
+
+// SEO посадочная: мобильная разработка
+Route::get('/razrabotka-mobilnyh-prilozheniy', function () {
+    return view('landing.mobile-development');
 });
 
 // Sitemap
@@ -33,6 +46,24 @@ Route::get('/sitemap.xml', function () {
         .   '<changefreq>yearly</changefreq>'
         .   '<priority>0.3</priority>'
         . '</url>'
+        . '<url>'
+        .   '<loc>' . $url . '/razrabotka-saitov-pod-klyuch</loc>'
+        .   '<lastmod>' . $lastmod . '</lastmod>'
+        .   '<changefreq>weekly</changefreq>'
+        .   '<priority>0.8</priority>'
+        . '</url>'
+        . '<url>'
+        .   '<loc>' . $url . '/razrabotka-veb-prilozheniy</loc>'
+        .   '<lastmod>' . $lastmod . '</lastmod>'
+        .   '<changefreq>weekly</changefreq>'
+        .   '<priority>0.8</priority>'
+        . '</url>'
+        . '<url>'
+        .   '<loc>' . $url . '/razrabotka-mobilnyh-prilozheniy</loc>'
+        .   '<lastmod>' . $lastmod . '</lastmod>'
+        .   '<changefreq>weekly</changefreq>'
+        .   '<priority>0.8</priority>'
+        . '</url>'
         . '</urlset>';
 
     return response($xml, 200)->header('Content-Type', 'application/xml');
@@ -41,19 +72,8 @@ Route::get('/sitemap.xml', function () {
 // Contact form
 Route::post('/api/contact', [ContactController::class, 'send']);
 
-// Auth
-Route::get('/auth/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/auth/login', [AuthController::class, 'login'])->name('auth.login');
-Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
-
-// Admin panel (protected)
-Route::middleware('auth')->group(function () {
-    Route::get('/admin/messages', [AdminController::class, 'messages'])->name('admin.messages');
-    Route::delete('/admin/messages/{id}', [AdminController::class, 'deleteMessage'])->name('admin.messages.delete');
-
-    Route::get('/admin/analytics', [AdminController::class, 'analyticsSettings'])->name('admin.analytics');
-    Route::post('/admin/analytics', [AdminController::class, 'saveAnalyticsSettings'])->name('admin.analytics.save');
-
-    Route::get('/admin/privacy', [AdminController::class, 'privacyPage'])->name('admin.privacy');
-    Route::post('/admin/privacy', [AdminController::class, 'savePrivacyPage'])->name('admin.privacy.save');
-});
+// Legacy admin auth URLs -> Filament
+Route::redirect('/auth/login', '/admin/login')->name('login');
+Route::redirect('/admin/messages', '/admin/contact-messages');
+Route::redirect('/admin/analytics', '/admin/analytics-settings');
+Route::redirect('/admin/privacy', '/admin/privacy-settings');

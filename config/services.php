@@ -35,4 +35,14 @@ return [
         ],
     ],
 
+    'yandex_wordstat' => [
+        'client_id' => env('YANDEX_WORDSTAT_CLIENT_ID'),
+        'client_secret' => env('YANDEX_WORDSTAT_CLIENT_SECRET'),
+        'redirect_uri' => env('YANDEX_WORDSTAT_REDIRECT_URI', env('APP_URL') . '/admin/wordstat/oauth/callback'),
+        'scope' => env('YANDEX_WORDSTAT_SCOPE', ''),
+        'oauth_authorize_url' => env('YANDEX_OAUTH_AUTHORIZE_URL', 'https://oauth.yandex.ru/authorize'),
+        'oauth_token_url' => env('YANDEX_OAUTH_TOKEN_URL', 'https://oauth.yandex.ru/token'),
+        'api_base_url' => env('YANDEX_WORDSTAT_API_BASE_URL', ''),
+    ],
+
 ];

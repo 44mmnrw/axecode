@@ -1,10 +1,12 @@
 import React from 'react';
+import Logo from './Logo';
 
 const navLinks = [
   { label: 'Главная', href: '#home' },
   { label: 'Услуги', href: '#services' },
-  // { label: 'Портфолио', href: '#portfolio' },
+  { label: 'Портфолио', href: '#portfolio' },
   { label: 'О нас', href: '#about' },
+  { label: 'FAQ', href: '#faq' },
   { label: 'Контакты', href: '#contact' },
 ];
 
@@ -16,10 +18,8 @@ export default function Navigation() {
     >
       <div className="mx-auto flex h-full w-full max-w-6xl items-center justify-between px-6 lg:px-10">
         {/* Logo */}
-        <a href="#home" className="text-lg font-bold tracking-tight">
-          <span className="bg-gradient-to-r from-[#00d3f2] via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Axecode
-          </span>
+        <a href="#home">
+          <Logo />
         </a>
 
         {/* Navigation Links */}

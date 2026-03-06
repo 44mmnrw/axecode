@@ -210,7 +210,14 @@ function HeroWavesSvg() {
   );
 }
 
-export default function Hero() {
+export default function Hero({ content = null }) {
+  const badgeText = content?.badge || 'Технологии будущего • Здесь и сейчас';
+  const heroTitle = content?.title || 'Создаём будущее\nцифровых технологий';
+  const heroDescription = content?.description || 'Разрабатываем современные веб-сайты и мобильные приложения, которые помогают бизнесу расти и развиваться в цифровой среде. Наши решения сочетают передовые технологии с безупречным дизайном.';
+  const primaryButtonText = content?.primaryButtonText || 'Начать проект';
+  const secondaryButtonText = content?.secondaryButtonText || 'Наши услуги';
+  const titleLines = String(heroTitle).split(/\r?\n/).filter(Boolean);
+
   return (
     <section
       id="home"
@@ -238,7 +245,7 @@ export default function Hero() {
             {/* Badge content */}
             <div className="relative bg-[#0f172b] border border-cyan-500/50 rounded-full px-6 py-3 flex items-center gap-3 backdrop-blur-sm">
               <span className="text-sm bg-gradient-to-r from-cyan-300 via-purple-300 to-pink-300 bg-clip-text text-transparent font-medium whitespace-nowrap">
-                Технологии будущего • Здесь и сейчас
+                {badgeText}
               </span>
             </div>
           </div>
@@ -246,20 +253,24 @@ export default function Hero() {
 
         {/* Main heading */}
         <h1 className="text-5xl md:text-6xl font-bold leading-tight shadow-lg">
-          Создаём будущее<br />
-          цифровых технологий
+          {titleLines.length ? titleLines.map((line, index) => (
+            <React.Fragment key={`${line}-${index}`}>
+              {line}
+              {index < titleLines.length - 1 ? <br /> : null}
+            </React.Fragment>
+          )) : heroTitle}
         </h1>
 
         {/* Description */}
         <p className="text-gray-300 text-lg max-w-2xl mx-auto leading-relaxed shadow-lg">
-          Разрабатываем современные веб-сайты и мобильные приложения, которые помогают бизнесу расти и развиваться в цифровой среде. Наши решения сочетают передовые технологии с безупречным дизайном.
+          {heroDescription}
         </p>
 
         {/* Buttons */}
         <div className="flex gap-4 justify-center">
           {/* Primary button */}
           <button className="bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-300 hover:to-purple-500 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl">
-            Начать проект
+            {primaryButtonText}
             <ArrowRightIcon className="h-5 w-5" />
           </button>
 
@@ -268,7 +279,7 @@ export default function Hero() {
             href="#services"
             className="border border-gray-600 hover:border-gray-400 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 backdrop-blur-sm"
           >
-            Наши услуги
+            {secondaryButtonText}
           </a>
         </div>
 

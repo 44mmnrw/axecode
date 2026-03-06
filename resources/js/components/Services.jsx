@@ -71,46 +71,66 @@ function IconSupport(props) {
   );
 }
 
-const services = [
+const defaultServices = [
   {
     Icon: IconCode,
     title: 'Веб-разработка',
     description: 'Создаём современные и производительные веб-сайты с адаптивным дизайном и интуитивным интерфейсом.',
-    gradient: 'from-cyan-400 to-blue-600'
+    gradient: 'from-cyan-400 to-blue-600',
+    href: '/razrabotka-saitov-pod-klyuch'
   },
   {
     Icon: IconMobile,
     title: 'Мобильные приложения',
     description: 'Разрабатываем нативные и кроссплатформенные приложения для iOS и Android с безупречным UX.',
-    gradient: 'from-purple-400 to-pink-600'
+    gradient: 'from-purple-400 to-pink-600',
+    href: '/razrabotka-mobilnyh-prilozheniy'
   },
   {
     Icon: IconPalette,
     title: 'UI/UX Дизайн',
     description: 'Проектируем пользовательские интерфейсы, которые сочетают эстетику с функциональностью.',
-    gradient: 'from-pink-400 to-red-600'
+    gradient: 'from-pink-400 to-red-600',
+    href: '#contact'
   },
   {
     Icon: IconPuzzle,
     title: 'Кастомные решения',
     description: 'Создаём индивидуальные программные решения под уникальные задачи вашего бизнеса.',
-    gradient: 'from-indigo-400 to-purple-600'
+    gradient: 'from-indigo-400 to-purple-600',
+    href: '/razrabotka-veb-prilozheniy'
   },
   {
     Icon: IconSpeed,
     title: 'Оптимизация',
     description: 'Повышаем производительность существующих приложений и сайтов для лучшего пользовательского опыта.',
-    gradient: 'from-yellow-400 to-orange-600'
+    gradient: 'from-yellow-400 to-orange-600',
+    href: '#contact'
   },
   {
     Icon: IconSupport,
     title: 'Техподдержка',
     description: 'Обеспечиваем надёжную поддержку и обслуживание ваших цифровых продуктов 24/7.',
-    gradient: 'from-teal-400 to-cyan-600'
+    gradient: 'from-teal-400 to-cyan-600',
+    href: '/tehnicheskaya-podderzhka-sayta'
   }
 ];
 
-export default function Services() {
+export default function Services({ content = null }) {
+  const sectionTitle = content?.title || 'Наши услуги';
+  const sectionSubtitle = content?.subtitle || 'Комплексные решения для вашего цифрового успеха';
+
+  const services = defaultServices.map((item, index) => {
+    const managedItem = content?.items?.[index] || {};
+
+    return {
+      ...item,
+      title: managedItem.title || item.title,
+      description: managedItem.description || item.description,
+      href: managedItem.href || item.href,
+    };
+  });
+
   return (
     <section id="services" className="relative py-32 bg-[#020618] overflow-hidden">
       {/* Decorative blurs */}
@@ -121,14 +141,14 @@ export default function Services() {
         {/* Header */}
         <div className="text-center mb-20">
           <h2 className="text-xl bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent mb-4">
-            Наши услуги
+            {sectionTitle}
           </h2>
-          <p className="text-gray-400 text-lg">Комплексные решения для вашего цифрового успеха</p>
+          <p className="text-gray-400 text-lg">{sectionSubtitle}</p>
         </div>
 
         {/* Services Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map(({ Icon, title, description, gradient }) => (
+          {services.map(({ Icon, title, description, gradient, href }) => (
             <div
               key={title}
               className="group bg-[rgba(15,23,43,0.5)] border border-gray-700 rounded-2xl p-8 hover:border-cyan-500/50 transition-all duration-300 hover:shadow-2xl hover:shadow-cyan-500/20"
@@ -143,6 +163,15 @@ export default function Services() {
 
               {/* Description */}
               <p className="text-gray-400 mb-6 leading-relaxed">{description}</p>
+
+              {/* Link */}
+              <a
+                href={href}
+                className="inline-flex items-center gap-2 text-cyan-300 hover:text-white text-sm font-semibold transition-colors"
+              >
+                Подробнее
+                <span aria-hidden="true">→</span>
+              </a>
 
               {/* Accent line */}
               <div className="h-1 w-0 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 transition-all duration-500 group-hover:w-full" />
