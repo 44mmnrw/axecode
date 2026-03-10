@@ -75,42 +75,42 @@ const defaultServices = [
   {
     Icon: IconCode,
     title: 'Веб-разработка',
-    description: 'Создаём современные и производительные веб-сайты с адаптивным дизайном и интуитивным интерфейсом.',
+    description: 'Проектируем и разрабатываем сайты, которые усиливают доверие к бренду и стабильно приводят заявки.',
     gradient: 'from-cyan-400 to-blue-600',
     href: '/razrabotka-saitov-pod-klyuch'
   },
   {
     Icon: IconMobile,
     title: 'Мобильные приложения',
-    description: 'Разрабатываем нативные и кроссплатформенные приложения для iOS и Android с безупречным UX.',
+    description: 'Создаём приложения для iOS и Android с фокусом на удобство, скорость и бизнес-цели продукта.',
     gradient: 'from-purple-400 to-pink-600',
     href: '/razrabotka-mobilnyh-prilozheniy'
   },
   {
     Icon: IconPalette,
     title: 'UI/UX Дизайн',
-    description: 'Проектируем пользовательские интерфейсы, которые сочетают эстетику с функциональностью.',
+    description: 'Делаем интерфейсы понятными и визуально сильными, чтобы пользователю было легко дойти до целевого действия.',
     gradient: 'from-pink-400 to-red-600',
     href: '#contact'
   },
   {
     Icon: IconPuzzle,
     title: 'Кастомные решения',
-    description: 'Создаём индивидуальные программные решения под уникальные задачи вашего бизнеса.',
+    description: 'Разрабатываем индивидуальные решения под ваши процессы, интеграции и требования к масштабированию.',
     gradient: 'from-indigo-400 to-purple-600',
     href: '/razrabotka-veb-prilozheniy'
   },
   {
     Icon: IconSpeed,
     title: 'Оптимизация',
-    description: 'Повышаем производительность существующих приложений и сайтов для лучшего пользовательского опыта.',
+    description: 'Ускоряем сайты и приложения, улучшаем стабильность и повышаем конверсию за счёт технической оптимизации.',
     gradient: 'from-yellow-400 to-orange-600',
     href: '#contact'
   },
   {
     Icon: IconSupport,
     title: 'Техподдержка',
-    description: 'Обеспечиваем надёжную поддержку и обслуживание ваших цифровых продуктов 24/7.',
+    description: 'Поддерживаем и развиваем продукт после запуска: быстро решаем инциденты и планово усиливаем функционал.',
     gradient: 'from-teal-400 to-cyan-600',
     href: '/tehnicheskaya-podderzhka-sayta'
   }
@@ -118,7 +118,7 @@ const defaultServices = [
 
 export default function Services({ content = null }) {
   const sectionTitle = content?.title || 'Наши услуги';
-  const sectionSubtitle = content?.subtitle || 'Комплексные решения для вашего цифрового успеха';
+  const sectionSubtitle = content?.subtitle || 'Берём на себя полный цикл: от стратегии и дизайна до запуска и поддержки';
 
   const services = defaultServices.map((item, index) => {
     const managedItem = content?.items?.[index] || {};

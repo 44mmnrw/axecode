@@ -97,7 +97,7 @@ export default function Contact() {
             Свяжитесь с нами
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Готовы начать ваш проект? Напишите нам, и мы обсудим как воплотить вашу идею в жизнь
+            Расскажите о задаче — предложим рабочий план, обозначим сроки и сориентируем по бюджету.
           </p>
         </div>
 
@@ -106,7 +106,7 @@ export default function Contact() {
           {/* Left side - Contact Info */}
           <div className="space-y-8">
             <div>
-              <h3 className="text-2xl font-bold text-white mb-8">Контактная информация</h3>
+              <h3 className="text-2xl font-bold text-white mb-8">Как с нами связаться</h3>
 
               {/* Contact items */}
               <div className="space-y-4">
@@ -129,7 +129,7 @@ export default function Contact() {
 
             {/* Working hours */}
             <div className="rounded-2xl border border-[rgba(0,184,219,0.20)] bg-[linear-gradient(167deg,rgba(0,184,219,0.10),rgba(173,70,255,0.10))] p-6">
-              <h4 className="font-semibold text-white mb-4">Время работы</h4>
+              <h4 className="font-semibold text-white mb-4">График работы</h4>
               <p className="text-gray-300 mb-2">Понедельник - Пятница: 9:00 - 18:00</p>
               <p className="text-gray-400">Суббота - Воскресенье: Выходной</p>
             </div>

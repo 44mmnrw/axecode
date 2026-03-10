@@ -2,8 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\SeoDKeywordLandingController;
 use App\Http\Controllers\UserPageController;
 use App\Models\UserPage;
+use App\Support\SeoDKeywordLanding;
 
 Route::get('/', function () {
     return view('app');
@@ -31,6 +33,21 @@ Route::get('/razrabotka-mobilnyh-prilozheniy', function () {
     return view('landing.mobile-development');
 });
 
+// SEO посадочная: интернет-магазины
+Route::get('/razrabotka-internet-magazina', function () {
+    return view('landing.ecommerce-development');
+});
+
+// SEO посадочная: поддержка и сопровождение
+Route::get('/tehnicheskaya-podderzhka-sayta', function () {
+    return view('landing.support-development');
+});
+
+// Массовые SEO-посадочные по D-запросам (только totalCount > 0)
+Route::get('/d', [SeoDKeywordLandingController::class, 'index']);
+Route::get('/d/{slug}', [SeoDKeywordLandingController::class, 'show'])
+    ->where('slug', '[A-Za-z0-9\-]+');
+
 // Sitemap
 Route::get('/sitemap.xml', function () {
     $url = config('app.url');
@@ -47,6 +64,17 @@ Route::get('/sitemap.xml', function () {
                 . '<lastmod>' . $lastmod . '</lastmod>'
                 . '<changefreq>monthly</changefreq>'
                 . '<priority>0.6</priority>'
+                . '</url>';
+        })
+        ->implode('');
+
+    $dKeywordPagesXml = collect(SeoDKeywordLanding::bySlugMap())
+        ->map(function (array $item) use ($lastmod) {
+            return '<url>'
+                . '<loc>' . config('app.url') . '/d/' . $item['slug'] . '</loc>'
+                . '<lastmod>' . $lastmod . '</lastmod>'
+                . '<changefreq>monthly</changefreq>'
+                . '<priority>0.5</priority>'
                 . '</url>';
         })
         ->implode('');
@@ -83,7 +111,26 @@ Route::get('/sitemap.xml', function () {
         .   '<changefreq>weekly</changefreq>'
         .   '<priority>0.8</priority>'
         . '</url>'
+        . '<url>'
+        .   '<loc>' . $url . '/razrabotka-internet-magazina</loc>'
+        .   '<lastmod>' . $lastmod . '</lastmod>'
+        .   '<changefreq>weekly</changefreq>'
+        .   '<priority>0.8</priority>'
+        . '</url>'
+        . '<url>'
+        .   '<loc>' . $url . '/d</loc>'
+        .   '<lastmod>' . $lastmod . '</lastmod>'
+        .   '<changefreq>weekly</changefreq>'
+        .   '<priority>0.6</priority>'
+        . '</url>'
+        . '<url>'
+        .   '<loc>' . $url . '/tehnicheskaya-podderzhka-sayta</loc>'
+        .   '<lastmod>' . $lastmod . '</lastmod>'
+        .   '<changefreq>weekly</changefreq>'
+        .   '<priority>0.7</priority>'
+        . '</url>'
         . $pagesXml
+        . $dKeywordPagesXml
         . '</urlset>';
 
     return response($xml, 200)->header('Content-Type', 'application/xml');

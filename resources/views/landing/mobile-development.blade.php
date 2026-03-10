@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Разработка мобильных приложений iOS и Android — Axecode</title>
-    <meta name="description" content="Разработка мобильных приложений под ключ для iOS и Android. Проектирование, UI/UX, backend, публикация и сопровождение продукта.">
+    <meta name="description" content="Разработка мобильных приложений для iOS и Android: от продуктовой идеи и UX до релиза в сторах и дальнейшего развития.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ config('app.url') }}/razrabotka-mobilnyh-prilozheniy">
 
@@ -56,12 +56,7 @@
     <script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
 </head>
 <body class="min-h-screen bg-[#020618] text-white antialiased">
-<header class="sticky top-0 z-50 border-b border-white/5 bg-[rgba(2,6,24,0.85)] backdrop-blur-md">
-    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <a href="/" class="text-lg font-bold bg-gradient-to-r from-[#00d3f2] via-purple-400 to-pink-400 bg-clip-text text-transparent">Axecode</a>
-        <a href="/#contact" class="text-sm text-cyan-300 hover:text-white transition-colors">Обсудить проект</a>
-    </div>
-</header>
+@include('partials.site-header')
 
 <main>
     <section class="relative overflow-hidden py-20">
@@ -70,15 +65,15 @@
             <p class="text-cyan-300 text-sm mb-4">Услуги Axecode</p>
             <h1 class="text-4xl md:text-5xl font-bold leading-tight max-w-4xl">Разработка мобильных приложений iOS и Android</h1>
             <p class="text-gray-300 text-lg mt-6 max-w-3xl">
-                Создаём мобильные приложения, которые решают бизнес-задачи: клиентские сервисы,
-                внутренние инструменты, финтех и e-commerce решения с сильным UX.
+                Создаём мобильные приложения, которые решают конкретные бизнес-задачи: от клиентских сервисов до внутренних инструментов.
+                Помогаем пройти путь от идеи и прототипа до публикации и дальнейшего развития продукта.
             </p>
         </div>
     </section>
 
     <section class="py-16 border-t border-white/5">
         <div class="mx-auto max-w-6xl px-6">
-            <h2 class="text-2xl font-semibold mb-8">Что получаете на выходе</h2>
+            <h2 class="text-2xl font-semibold mb-8">Что вы получаете в результате</h2>
             <div class="grid md:grid-cols-2 gap-5">
                 <div class="rounded-2xl border border-white/10 bg-white/5 p-6">Приложение для iOS и Android</div>
                 <div class="rounded-2xl border border-white/10 bg-white/5 p-6">Проработанный UX/UI интерфейс</div>
@@ -101,9 +96,9 @@
 
     <section class="py-20 border-t border-white/5">
         <div class="mx-auto max-w-4xl px-6 text-center">
-            <h2 class="text-3xl font-bold">Пора запускать мобильный продукт</h2>
-            <p class="text-gray-300 mt-4">Подготовим оценку, roadmap и предложим оптимальный формат разработки.</p>
-            <a href="/#contact" class="inline-block mt-8 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 px-8 py-3 font-semibold text-white hover:from-cyan-300 hover:to-purple-500 transition-all">Получить оценку</a>
+            <h2 class="text-3xl font-bold">Готовы запустить мобильный продукт?</h2>
+            <p class="text-gray-300 mt-4">Подготовим roadmap, предложим оптимальный формат разработки и дадим реалистичную оценку.</p>
+            <a href="/#contact" class="inline-block mt-8 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 px-8 py-3 font-semibold text-white hover:from-cyan-300 hover:to-purple-500 transition-all">Получить план и оценку</a>
         </div>
     </section>
 
@@ -121,5 +116,6 @@
         </div>
     </section>
 </main>
+@include('partials.site-footer')
 </body>
 </html>

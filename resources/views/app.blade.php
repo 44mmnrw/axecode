@@ -4,10 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    @php
+        $seoTitle = (string) \App\Models\Setting::get('seo_title', 'Разработка сайтов и приложений для бизнеса — Axecode');
+        $seoDescription = (string) \App\Models\Setting::get('seo_description', 'Axecode — команда разработки полного цикла. Проектируем и запускаем сайты, веб-сервисы и мобильные приложения: от аналитики и UX до поддержки и развития продукта.');
+        $seoKeywords = (string) \App\Models\Setting::get('seo_keywords', 'разработка сайтов под ключ, создание сайта для бизнеса, разработка веб-приложений, мобильные приложения iOS Android, UI UX дизайн, техническая поддержка сайта, SEO оптимизация сайта, веб-студия Axecode');
+
+        $seoOgTitle = (string) \App\Models\Setting::get('seo_og_title', $seoTitle);
+        $seoOgDescription = (string) \App\Models\Setting::get('seo_og_description', 'Разрабатываем цифровые продукты для бизнеса: сайты, веб-сервисы и мобильные приложения. Понятный процесс, сильная экспертиза и сопровождение после запуска.');
+        $seoOgImageRaw = (string) \App\Models\Setting::get('seo_og_image', '');
+        $seoOgImage = $seoOgImageRaw !== ''
+            ? ((str_starts_with($seoOgImageRaw, 'http://') || str_starts_with($seoOgImageRaw, 'https://'))
+                ? $seoOgImageRaw
+                : asset('storage/' . ltrim($seoOgImageRaw, '/')))
+            : (config('app.url') . '/og-image.png');
+
+        $seoTwitterTitle = (string) \App\Models\Setting::get('seo_twitter_title', $seoTitle);
+        $seoTwitterDescription = (string) \App\Models\Setting::get('seo_twitter_description', 'Сайты и приложения для бизнеса: от аналитики и дизайна до запуска, поддержки и развития продукта.');
+    @endphp
+
     {{-- ─── Primary SEO ────────────────────────────────────────────────── --}}
-    <title>Разработка сайтов и мобильных приложений под ключ — Axecode</title>
-    <meta name="description" content="Axecode — веб-студия полного цикла. Разработка сайтов, веб-приложений и мобильных приложений под ключ: UX/UI дизайн, интеграции, техподдержка и SEO-оптимизация.">
-    <meta name="keywords" content="разработка сайтов под ключ, создание сайта для бизнеса, разработка веб-приложений, мобильные приложения iOS Android, UI UX дизайн, техническая поддержка сайта, SEO оптимизация сайта, веб-студия Axecode">
+    <title>{{ $seoTitle }}</title>
+    <meta name="description" content="{{ $seoDescription }}">
+    <meta name="keywords" content="{{ $seoKeywords }}">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Axecode">
     <link rel="canonical" href="{{ config('app.url') }}">
@@ -15,9 +33,9 @@
     {{-- ─── Open Graph (Facebook, Telegram, VK, Slack…) ──────────────── --}}
     <meta property="og:type"         content="website">
     <meta property="og:url"          content="{{ config('app.url') }}">
-    <meta property="og:title"        content="Разработка сайтов и мобильных приложений под ключ — Axecode">
-    <meta property="og:description"  content="Разрабатываем сайты, веб-приложения и мобильные приложения для бизнеса. UX/UI дизайн, интеграции, техподдержка и SEO-оптимизация.">
-    <meta property="og:image"        content="{{ config('app.url') }}/og-image.png">
+    <meta property="og:title"        content="{{ $seoOgTitle }}">
+    <meta property="og:description"  content="{{ $seoOgDescription }}">
+    <meta property="og:image"        content="{{ $seoOgImage }}">
     <meta property="og:image:width"  content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt"    content="Axecode — Технологии будущего">
@@ -26,9 +44,9 @@
 
     {{-- ─── Twitter Card ───────────────────────────────────────────────── --}}
     <meta name="twitter:card"        content="summary_large_image">
-    <meta name="twitter:title"       content="Разработка сайтов и мобильных приложений под ключ — Axecode">
-    <meta name="twitter:description" content="Сайты, веб-приложения и мобильные приложения для бизнеса: от аналитики и дизайна до запуска и поддержки 24/7.">
-    <meta name="twitter:image"       content="{{ config('app.url') }}/og-image.png">
+    <meta name="twitter:title"       content="{{ $seoTwitterTitle }}">
+    <meta name="twitter:description" content="{{ $seoTwitterDescription }}">
+    <meta name="twitter:image"       content="{{ $seoOgImage }}">
 
     {{-- ─── Preconnect (ускоряем загрузку внешних ресурсов) ──────────── --}}
     <link rel="preconnect" href="https://mc.yandex.ru">

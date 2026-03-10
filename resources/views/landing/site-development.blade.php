@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Разработка сайтов под ключ для бизнеса — Axecode</title>
-    <meta name="description" content="Разработка сайтов под ключ: корпоративные сайты, лендинги и интернет-магазины. Берём проект от аналитики и прототипа до запуска и техподдержки.">
+    <meta name="description" content="Разрабатываем сайты под задачи бизнеса: корпоративные, лендинги и интернет-магазины. Ведём проект от идеи и прототипа до запуска и дальнейшего развития.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ config('app.url') }}/razrabotka-saitov-pod-klyuch">
 
@@ -77,14 +77,7 @@
     <script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
 </head>
 <body class="min-h-screen bg-[#020618] text-white antialiased">
-<header class="sticky top-0 z-50 border-b border-white/5 bg-[rgba(2,6,24,0.85)] backdrop-blur-md">
-    <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <a href="/" class="text-lg font-bold bg-gradient-to-r from-[#00d3f2] via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            Axecode
-        </a>
-        <a href="/#contact" class="text-sm text-cyan-300 hover:text-white transition-colors">Обсудить проект</a>
-    </div>
-</header>
+@include('partials.site-header')
 
 <main>
     <section class="relative overflow-hidden py-20">
@@ -93,8 +86,8 @@
             <p class="text-cyan-300 text-sm mb-4">Услуги Axecode</p>
             <h1 class="text-4xl md:text-5xl font-bold leading-tight max-w-4xl">Разработка сайтов под ключ для бизнеса</h1>
             <p class="text-gray-300 text-lg mt-6 max-w-3xl">
-                Помогаем компаниям запускать сайты, которые приносят заявки и продажи: от аналитики и UX до разработки,
-                интеграций и поддержки после релиза.
+                Создаём сайты, которые помогают бизнесу расти: усиливают доверие к бренду, приводят заявки и поддерживают продажи.
+                Берём на себя весь цикл — от аналитики и UX до разработки, интеграций и сопровождения после релиза.
             </p>
             <div class="mt-8 flex flex-wrap gap-3 text-sm text-gray-300">
                 <span class="rounded-full border border-white/10 px-4 py-2">Корпоративные сайты</span>
@@ -149,10 +142,10 @@
 
     <section class="py-20 border-t border-white/5">
         <div class="mx-auto max-w-4xl px-6 text-center">
-            <h2 class="text-3xl font-bold">Нужен сайт, который приносит заявки?</h2>
-            <p class="text-gray-300 mt-4">Напишите нам — оценим проект, предложим архитектуру и план запуска.</p>
+            <h2 class="text-3xl font-bold">Планируете новый сайт или обновление текущего?</h2>
+            <p class="text-gray-300 mt-4">Подготовим понятный план работ, предложим архитектуру и дадим прозрачную оценку по срокам и бюджету.</p>
             <a href="/#contact" class="inline-block mt-8 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 px-8 py-3 font-semibold text-white hover:from-cyan-300 hover:to-purple-500 transition-all">
-                Обсудить проект
+                Получить план и смету
             </a>
         </div>
     </section>
@@ -172,10 +165,6 @@
     </section>
 </main>
 
-<footer class="border-t border-white/5 py-8">
-    <div class="mx-auto max-w-6xl px-6 text-center text-sm text-gray-500">
-        © {{ date('Y') }} Axecode. Все права защищены.
-    </div>
-</footer>
+@include('partials.site-footer')
 </body>
 </html>

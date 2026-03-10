@@ -29,8 +29,8 @@ const defaultFaqItems = [
 ];
 
 export default function SeoFaq({ content = null }) {
-  const faqTitle = content?.title || 'Частые вопросы о разработке сайтов и мобильных приложений';
-  const faqSubtitle = content?.subtitle || 'Ответы на популярные вопросы клиентов перед стартом проекта.';
+  const faqTitle = content?.title || 'Частые вопросы перед стартом проекта';
+  const faqSubtitle = content?.subtitle || 'Собрали ответы на вопросы, которые чаще всего обсуждаем на первом звонке.';
   const faqItems = Array.isArray(content?.items) && content.items.length
     ? content.items
     : defaultFaqItems;

@@ -211,11 +211,11 @@ function HeroWavesSvg() {
 }
 
 export default function Hero({ content = null }) {
-  const badgeText = content?.badge || 'Технологии будущего • Здесь и сейчас';
-  const heroTitle = content?.title || 'Создаём будущее\nцифровых технологий';
-  const heroDescription = content?.description || 'Разрабатываем современные веб-сайты и мобильные приложения, которые помогают бизнесу расти и развиваться в цифровой среде. Наши решения сочетают передовые технологии с безупречным дизайном.';
-  const primaryButtonText = content?.primaryButtonText || 'Начать проект';
-  const secondaryButtonText = content?.secondaryButtonText || 'Наши услуги';
+  const badgeText = content?.badge || 'Цифровые продукты для роста бизнеса';
+  const heroTitle = content?.title || 'Разрабатываем сайты\nи приложения, которые работают на результат';
+  const heroDescription = content?.description || 'Помогаем пройти путь от идеи до запуска: анализируем задачи, проектируем удобный UX, разрабатываем и сопровождаем продукт после релиза. Без лишней сложности — с понятными этапами и прозрачной коммуникацией.';
+  const primaryButtonText = content?.primaryButtonText || 'Обсудить проект';
+  const secondaryButtonText = content?.secondaryButtonText || 'Посмотреть услуги';
   const titleLines = String(heroTitle).split(/\r?\n/).filter(Boolean);
 
   return (
@@ -269,10 +269,13 @@ export default function Hero({ content = null }) {
         {/* Buttons */}
         <div className="flex gap-4 justify-center">
           {/* Primary button */}
-          <button className="bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-300 hover:to-purple-500 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl">
+          <a
+            href="#contact"
+            className="bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-300 hover:to-purple-500 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl"
+          >
             {primaryButtonText}
             <ArrowRightIcon className="h-5 w-5" />
-          </button>
+          </a>
 
           {/* Secondary button */}
           <a
@@ -286,7 +289,7 @@ export default function Hero({ content = null }) {
         {/* Statistics */}
         <div className="grid grid-cols-4 gap-4 pt-8">
           {[
-            { number: '150+', label: 'Проектов' },
+            { number: '150+', label: 'Реализованных проектов' },
             { number: '98%', label: 'Довольных клиентов' },
             { number: '5+', label: 'Лет опыта' },
             { number: '24/7', label: 'Поддержка' }

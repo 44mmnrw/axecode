@@ -1,7 +1,8 @@
 param(
     [string]$Code,
     [string]$ProjectRoot = "D:\laragon\www\axecode",
-    [switch]$NoUpdateCore
+    [switch]$NoUpdateCore,
+    [switch]$NoColloquialForms
 )
 
 $ErrorActionPreference = 'Stop'
@@ -40,6 +41,46 @@ function Get-Priority {
     if ($Count -ge 3000) { return 'B' }
     if ($Count -ge 700) { return 'C' }
     return 'D'
+}
+
+function Add-Phrase {
+    param(
+        [System.Collections.Generic.HashSet[string]]$Set,
+        [string]$Phrase
+    )
+
+    $normalized = ($Phrase ?? '').Trim().ToLowerInvariant()
+    if ([string]::IsNullOrWhiteSpace($normalized)) {
+        return
+    }
+
+    $null = $Set.Add($normalized)
+}
+
+function Add-PhraseBatch {
+    param(
+        [System.Collections.Generic.HashSet[string]]$Set,
+        [string[]]$Phrases
+    )
+
+    foreach ($phrase in $Phrases) {
+        Add-Phrase -Set $Set -Phrase $phrase
+    }
+}
+
+function Split-IntoChunks {
+    param(
+        [string[]]$Items,
+        [int]$ChunkSize = 50
+    )
+
+    $chunks = @()
+    for ($i = 0; $i -lt $Items.Count; $i += $ChunkSize) {
+        $end = [Math]::Min($i + $ChunkSize - 1, $Items.Count - 1)
+        $chunks += ,($Items[$i..$end])
+    }
+
+    return $chunks
 }
 
 function Load-TokenCache {
@@ -160,113 +201,252 @@ $token = $tokenResp.access_token
 Write-Host "[2/4] Check /v1/userInfo..."
 $userInfo = Invoke-RestMethod -Method Post -Uri 'https://api.wordstat.yandex.net/v1/userInfo' -Headers @{ Authorization = "Bearer $token"; 'Content-Type' = 'application/json;charset=utf-8' } -Body '{}'
 
-$phrases = @(
-    'создание сайта',
-    'разработка сайта',
+
+$phraseSet = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+
+$basePhrases = @(
     'заказать сайт',
     'сайт под ключ',
-    'создание сайтов под ключ',
+    'создание сайта',
+    'разработка сайта',
     'разработка сайтов',
-    'создание веб сайта',
-    'сделать сайт для бизнеса',
-    'веб разработка',
-    'веб студия',
+    'создание сайтов под ключ',
     'разработка сайтов под ключ',
-    'создание сайта для бизнеса',
     'заказать разработку сайта',
-    'веб-студия разработки сайтов',
+    'создание сайта для бизнеса',
     'разработка корпоративного сайта',
     'создание корпоративного сайта',
     'разработка лендинга',
+    'разработка landing page',
+    'разработка лендинг пейдж',
     'разработка веб-приложений',
     'разработка web приложений',
-    'разработка личного кабинета',
+    'разработка веб приложения',
+    'заказать разработку веб приложения',
+    'разработка веб сервиса',
+    'разработка онлайн сервиса',
+    'разработка веб портала',
     'разработка crm',
     'разработка crm системы',
+    'разработка личного кабинета',
     'разработка saas',
     'разработка saas платформы',
     'разработка b2b портала',
     'разработка b2c платформы',
-    'разработка e commerce',
     'создание интернет магазина',
-    'интернет магазин под ключ',
     'разработка интернет-магазина',
+    'интернет магазин под ключ',
     'разработка маркетплейса',
     'разработка мобильного приложения',
     'разработка мобильных приложений',
     'мобильная разработка',
-    'разработка приложения',
-    'разработка приложений ios',
-    'разработка приложений android',
+    'заказать мобильное приложение',
+    'мобильное приложение под ключ',
     'разработка приложения ios',
     'разработка приложения android',
-    'мобильное приложение',
-    'мобильное приложение под ключ',
+    'разработка приложения для ios',
+    'разработка приложения для android',
+    'разработка приложений ios',
+    'разработка приложений android',
     'кроссплатформенная разработка',
     'кроссплатформенная мобильная разработка',
-    'react native разработка',
     'flutter разработка',
-    'разработка мобильных приложений ios android',
-    'разработка landing page',
-    'разработка лендинг пейдж',
+    'react native разработка',
     'разработка сайта на laravel',
     'разработка сайта на react',
     'backend разработка laravel',
-    'разработка аналитической панели',
-    'ui ux дизайн',
-    'ui ux дизайн сайта',
-    'ux дизайн сайта',
-    'дизайн интерфейсов',
-    'продуктовый дизайн интерфейсов',
-    'редизайн сайта',
-    'редизайн сайта под конверсию',
-    'оптимизация сайта',
-    'ускорение сайта',
-    'ускорение загрузки сайта',
+    'веб студия',
+    'веб-студия разработки сайтов',
+    'веб разработка',
     'техническая поддержка',
     'техническая поддержка сайта',
     'поддержка сайта',
     'сопровождение сайта',
     'развитие и сопровождение проекта',
-    'seo',
-    'seo сайта',
-    'seo продвижение',
-    'seo оптимизация',
-    'seo оптимизация сайта',
-    'продвижение сайта',
-    'продвижение сайта в яндексе',
-    'контекстная реклама',
-    'разработка и продвижение сайта',
-    'создание и продвижение сайта',
-    'стоимость разработки сайта',
-    'цена разработки сайта',
-    'сколько стоит сайт',
-    'сколько стоит разработка сайта',
-    'сроки разработки сайта',
-    'этапы разработки сайта',
-    'этапы создания мобильного приложения',
-    'разработка приложения для ios',
-    'разработка приложения для android',
-    'разработка веб сервиса',
-    'разработка веб портала',
-    'разработка онлайн сервиса',
-    'заказать разработку веб приложения',
-    'заказать мобильное приложение'
+    'редизайн сайта',
+    'редизайн сайта под конверсию',
+    'ускорение сайта',
+    'ускорение загрузки сайта',
+    'оптимизация сайта',
+    'ui ux дизайн',
+    'ui ux дизайн сайта',
+    'ux дизайн сайта',
+    'дизайн интерфейсов'
 )
 
-Write-Host "[3/4] Fetch /v1/topRequests..."
-$body = @{ phrases = $phrases } | ConvertTo-Json -Depth 5
-$apiResp = Invoke-RestMethod -Method Post -Uri 'https://api.wordstat.yandex.net/v1/topRequests' -Headers @{ Authorization = "Bearer $token"; 'Content-Type' = 'application/json;charset=utf-8' } -Body $body
+Add-PhraseBatch -Set $phraseSet -Phrases $basePhrases
 
-if (-not $apiResp) {
-    throw 'Wordstat topRequests returned empty response.'
+$objectsForOrder = @(
+    'сайт',
+    'сайты',
+    'корпоративный сайт',
+    'веб сайт',
+    'лендинг',
+    'интернет магазин',
+    'веб приложение',
+    'онлайн сервис',
+    'веб сервис',
+    'веб портал',
+    'crm систему',
+    'личный кабинет',
+    'saas платформу',
+    'маркетплейс',
+    'мобильное приложение',
+    'мобильные приложения',
+    'приложение ios',
+    'приложение android'
+)
+
+$objectsForDevelopment = @(
+    'сайта',
+    'сайтов',
+    'корпоративного сайта',
+    'веб сайта',
+    'лендинга',
+    'интернет-магазина',
+    'веб-приложения',
+    'веб-сервиса',
+    'онлайн-сервиса',
+    'веб-портала',
+    'crm системы',
+    'личного кабинета',
+    'saas платформы',
+    'маркетплейса',
+    'мобильного приложения',
+    'мобильных приложений',
+    'приложения ios',
+    'приложения android'
+)
+
+$buyIntentPrefixes = @(
+    'заказать',
+    'сделать'
+)
+
+$commercialSuffixes = @(
+    '',
+    'под ключ',
+    'для бизнеса',
+    'цена',
+    'стоимость',
+    'москва',
+    'санкт петербург'
+)
+
+foreach ($prefix in $buyIntentPrefixes) {
+    foreach ($obj in $objectsForOrder) {
+        Add-Phrase -Set $phraseSet -Phrase "$prefix $obj"
+        foreach ($suffix in $commercialSuffixes) {
+            if (-not [string]::IsNullOrWhiteSpace($suffix)) {
+                Add-Phrase -Set $phraseSet -Phrase "$prefix $obj $suffix"
+            }
+        }
+    }
 }
 
-if ($apiResp -isnot [System.Array]) {
-    $apiResp = @($apiResp)
+$developmentPrefixes = @(
+    'создание',
+    'разработка',
+    'заказать разработку'
+)
+
+foreach ($prefix in $developmentPrefixes) {
+    foreach ($obj in $objectsForDevelopment) {
+        Add-Phrase -Set $phraseSet -Phrase "$prefix $obj"
+        foreach ($suffix in $commercialSuffixes) {
+            if (-not [string]::IsNullOrWhiteSpace($suffix)) {
+                Add-Phrase -Set $phraseSet -Phrase "$prefix $obj $suffix"
+            }
+        }
+    }
 }
 
-$rows = foreach ($item in $apiResp) {
+# Реальные «поисковые» словоформы (в т.ч. неграмотные),
+# которые часто встречаются в Wordstat и дают дополнительную семантику.
+if (-not $NoColloquialForms) {
+    $objectsForColloquial = @(
+        'сайт',
+        'сайты',
+        'корпоративный сайт',
+        'веб сайт',
+        'лендинг',
+        'интернет магазин',
+        'веб приложение',
+        'онлайн сервис',
+        'веб сервис',
+        'веб портал',
+        'crm',
+        'crm система',
+        'личный кабинет',
+        'saas платформа',
+        'маркетплейс',
+        'мобильное приложение',
+        'мобильные приложения',
+        'приложение ios',
+        'приложение android'
+    )
+
+    $colloquialPrefixes = @(
+        'создание',
+        'разработка'
+    )
+
+    foreach ($prefix in $colloquialPrefixes) {
+        foreach ($obj in $objectsForColloquial) {
+            Add-Phrase -Set $phraseSet -Phrase "$prefix $obj"
+            foreach ($suffix in $commercialSuffixes) {
+                if (-not [string]::IsNullOrWhiteSpace($suffix)) {
+                    Add-Phrase -Set $phraseSet -Phrase "$prefix $obj $suffix"
+                }
+            }
+        }
+    }
+}
+
+$techAndStack = @(
+    'laravel разработка',
+    'react разработка',
+    'vue разработка',
+    'php разработка',
+    'javascript разработка',
+    'typescript разработка',
+    'ios разработка',
+    'android разработка'
+)
+
+Add-PhraseBatch -Set $phraseSet -Phrases $techAndStack
+
+$phrases = @($phraseSet) | Sort-Object
+
+Write-Host "[3/4] Prepared $($phrases.Count) phrases for Wordstat..."
+
+Write-Host "[3/4] Fetch /v1/topRequests in batches..."
+$chunks = Split-IntoChunks -Items $phrases -ChunkSize 50
+$apiItems = @()
+
+for ($chunkIndex = 0; $chunkIndex -lt $chunks.Count; $chunkIndex++) {
+    $chunk = $chunks[$chunkIndex]
+    Write-Host ("  -> batch {0}/{1} ({2} phrases)" -f ($chunkIndex + 1), $chunks.Count, $chunk.Count)
+
+    $body = @{ phrases = $chunk } | ConvertTo-Json -Depth 5
+    $chunkResp = Invoke-RestMethod -Method Post -Uri 'https://api.wordstat.yandex.net/v1/topRequests' -Headers @{ Authorization = "Bearer $token"; 'Content-Type' = 'application/json;charset=utf-8' } -Body $body
+
+    if ($chunkResp) {
+        if ($chunkResp -is [System.Array]) {
+            $apiItems += $chunkResp
+        } else {
+            $apiItems += @($chunkResp)
+        }
+    }
+
+    Start-Sleep -Milliseconds 150
+}
+
+if (-not $apiItems -or $apiItems.Count -eq 0) {
+    throw 'Wordstat topRequests returned empty response for all batches.'
+}
+
+$rows = foreach ($item in $apiItems) {
     [PSCustomObject]@{
         phrase = $item.requestPhrase
         totalCount = [int]($item.totalCount ?? 0)
@@ -275,7 +455,14 @@ $rows = foreach ($item in $apiResp) {
     }
 }
 
-$rows = $rows | Sort-Object totalCount -Descending
+$rows = $rows |
+    Sort-Object phrase, totalCount -Descending |
+    Group-Object phrase |
+    ForEach-Object { $_.Group | Select-Object -First 1 } |
+    Sort-Object totalCount -Descending
+
+$commercialRegex = '(заказать|сделать|под ключ|разработка|создание|веб\s*-?студ|сопровождение|поддержка|интернет\s*-?магазин|маркетплейс|мобильн|корпоративн|crm|saas|личн(ый|ого)\s+кабинет)'
+$commercialRows = $rows | Where-Object { $_.phrase -match $commercialRegex } | Sort-Object totalCount -Descending
 
 $today = Get-Date -Format 'yyyy-MM-dd'
 $snapshotPath = Join-Path $ProjectRoot "storage\app\wordstat_semantic_snapshot_$today.json"
@@ -283,7 +470,7 @@ $rows | ConvertTo-Json -Depth 10 | Set-Content -Path $snapshotPath -Encoding UTF
 
 if (-not $NoUpdateCore) {
     Write-Host "[4/4] Update SEO_SEMANTIC_CORE.md..."
-    $corePath = Join-Path $ProjectRoot 'SEO_SEMANTIC_CORE.md'
+    $corePath = Join-Path $ProjectRoot 'SEO\SEO_SEMANTIC_CORE.md'
 
     $lines = @()
     $lines += "# Семантическое ядро Axecode (обновлено через Wordstat API, $today)"
@@ -293,6 +480,18 @@ if (-not $NoUpdateCore) {
     $lines += "- Пользователь: $($userInfo.userInfo.login)"
     $lines += "- Квота в день: $($userInfo.userInfo.dailyLimit), остаток: $($userInfo.userInfo.dailyLimitRemaining)"
     $lines += "- Ограничение в секунду: $($userInfo.userInfo.limitPerSecond)"
+    $lines += "- Проанализировано фраз: $($phrases.Count)"
+    $lines += "- Получено запросов (уникальных): $($rows.Count)"
+    $lines += "- Релевантных коммерческих: $($commercialRows.Count)"
+    $lines += ''
+    $lines += '## Максимально релевантные коммерческие запросы (Top 150)'
+    $lines += '| Приоритет | Запрос | Частотность (totalCount) |'
+    $lines += '|---|---|---:|'
+
+    foreach ($row in ($commercialRows | Select-Object -First 150)) {
+        $safePhrase = ($row.phrase -replace '\|', '\\|')
+        $lines += "| $($row.priority) | $safePhrase | $($row.totalCount) |"
+    }
     $lines += ''
     $lines += '## Приоритизированный список запросов (по totalCount)'
     $lines += '| Приоритет | Запрос | Частотность (totalCount) |'

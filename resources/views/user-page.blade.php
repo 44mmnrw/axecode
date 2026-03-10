@@ -19,15 +19,12 @@
     @vite(['resources/css/app.css'])
 </head>
 <body class="min-h-screen bg-[#020618] text-white antialiased">
-
-    <header class="sticky top-0 z-50 border-b border-white/5 bg-[rgba(2,6,24,0.85)] backdrop-blur-md">
-        <div class="mx-auto flex h-16 max-w-5xl items-center justify-between px-6">
-            <a href="/" class="text-lg font-bold bg-gradient-to-r from-[#00d3f2] via-purple-400 to-pink-400 bg-clip-text text-transparent">
-                Axecode
-            </a>
-            <a href="/" class="text-sm text-gray-400 hover:text-white transition-colors">← На главную</a>
-        </div>
-    </header>
+    @include('partials.site-header', [
+        'maxWidthClass' => 'max-w-5xl',
+        'actionHref' => '/',
+        'actionText' => '← На главную',
+        'actionTextClass' => 'text-gray-400',
+    ])
 
     <main class="mx-auto max-w-4xl px-6 py-16">
         <h1 class="text-3xl sm:text-4xl font-bold mb-8">{{ $page->title }}</h1>
@@ -37,13 +34,11 @@
         </div>
     </main>
 
-    <footer class="border-t border-white/5 py-8 mt-16">
-        <div class="mx-auto max-w-5xl px-6 text-center text-sm text-gray-500">
-            © {{ date('Y') }} Axecode. Все права защищены.
-            <span class="mx-2">·</span>
-            <a href="/pages/privacy" class="hover:text-gray-300 transition-colors">Политика конфиденциальности</a>
-        </div>
-    </footer>
+    @include('partials.site-footer', [
+        'maxWidthClass' => 'max-w-5xl',
+        'marginTopClass' => 'mt-16',
+        'privacyLink' => '/pages/privacy',
+    ])
 
 </body>
 </html>

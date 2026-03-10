@@ -87,8 +87,8 @@ export default function Portfolio() {
             Портфолио: разработка сайтов и мобильных приложений
           </h2>
           <p className="text-gray-400 text-lg max-w-3xl mx-auto">
-            Реализуем проекты под ключ: корпоративные сайты, веб-приложения, e-commerce и мобильные
-            приложения для iOS и Android.
+            Здесь — примеры проектов, где мы помогли бизнесу запустить продукт, автоматизировать процессы
+            и получить измеримый результат.
           </p>
         </div>
 
@@ -207,11 +207,14 @@ export default function Portfolio() {
         {/* CTA */}
         <div className="text-center mt-20">
           <p className="text-gray-400 mb-6">
-            Хотите увидеть больше проектов или обсудить вашу идею?
+            Хотите обсудить похожий проект под ваши задачи?
           </p>
-          <button className="bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-300 hover:to-purple-500 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl">
-            Связаться с нами
-          </button>
+          <a
+            href="#contact"
+            className="inline-block bg-gradient-to-r from-cyan-400 to-purple-600 hover:from-cyan-300 hover:to-purple-500 text-white font-semibold py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
+          >
+            Обсудить задачу
+          </a>
         </div>
       </div>
     </section>
