@@ -33,8 +33,16 @@ set SERVER=axecode_tech_usr@85.239.57.126
 set DEPLOY_PATH=/var/www/axecode_tech_usr/data/www/axecode.tech
 set PHP=/usr/bin/php8.3
 set COMPOSER=/usr/local/bin/composer
+set BRANCH=DEV
 
-ssh %SERVER% "cd %DEPLOY_PATH% && git pull origin main && npm install --silent && npm run build && %PHP% %COMPOSER% install --no-dev --optimize-autoloader --quiet && %PHP% artisan migrate --force && %PHP% artisan optimize:clear && %PHP% artisan optimize && echo DEPLOY_OK"
+git push origin %BRANCH%
+if %errorlevel% neq 0 (
+    echo [ERROR] git push в ветку %BRANCH% завершился с ошибкой.
+    pause
+    exit /b 1
+)
+
+ssh %SERVER% "set -e; cd %DEPLOY_PATH% && git fetch origin && (git checkout %BRANCH% || git checkout -b %BRANCH% origin/%BRANCH%) && git pull origin %BRANCH% && npm install --silent && npm run build && (%PHP% %COMPOSER% install --no-dev --optimize-autoloader --quiet || %PHP% %COMPOSER% install --no-dev --optimize-autoloader --quiet --ignore-platform-req=ext-intl) && %PHP% artisan migrate --force && %PHP% artisan optimize:clear && %PHP% artisan optimize && git checkout -- package-lock.json && echo DEPLOY_OK"
 
 if %errorlevel% neq 0 (
     echo.

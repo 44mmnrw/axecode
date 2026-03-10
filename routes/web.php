@@ -2,15 +2,19 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\UserPageController;
+use App\Models\UserPage;
 
 Route::get('/', function () {
     return view('app');
 });
 
-// Политика конфиденциальности
-Route::get('/privacy', function () {
-    return view('privacy');
-});
+// Публичные пользовательские страницы
+Route::get('/privacy', [UserPageController::class, 'showBySlug'])
+    ->defaults('slug', 'privacy');
+
+Route::get('/pages/{slug}', [UserPageController::class, 'showBySlug'])
+    ->where('slug', '[A-Za-z0-9\-]+');
 
 // SEO посадочная: разработка сайтов
 Route::get('/razrabotka-saitov-pod-klyuch', function () {
@@ -31,6 +35,21 @@ Route::get('/razrabotka-mobilnyh-prilozheniy', function () {
 Route::get('/sitemap.xml', function () {
     $url = config('app.url');
     $lastmod = now()->toAtomString();
+
+    $pagesXml = UserPage::query()
+        ->published()
+        ->get(['slug', 'updated_at'])
+        ->map(function (UserPage $page) {
+            $lastmod = ($page->updated_at ?? now())->toAtomString();
+
+            return '<url>'
+                . '<loc>' . config('app.url') . '/pages/' . $page->slug . '</loc>'
+                . '<lastmod>' . $lastmod . '</lastmod>'
+                . '<changefreq>monthly</changefreq>'
+                . '<priority>0.6</priority>'
+                . '</url>';
+        })
+        ->implode('');
 
     $xml = '<?xml version="1.0" encoding="UTF-8"?>'
         . '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
@@ -64,6 +83,7 @@ Route::get('/sitemap.xml', function () {
         .   '<changefreq>weekly</changefreq>'
         .   '<priority>0.8</priority>'
         . '</url>'
+        . $pagesXml
         . '</urlset>';
 
     return response($xml, 200)->header('Content-Type', 'application/xml');
@@ -76,4 +96,4 @@ Route::post('/api/contact', [ContactController::class, 'send']);
 Route::redirect('/auth/login', '/admin/login')->name('login');
 Route::redirect('/admin/messages', '/admin/contact-messages');
 Route::redirect('/admin/analytics', '/admin/analytics-settings');
-Route::redirect('/admin/privacy', '/admin/privacy-settings');
+Route::redirect('/admin/privacy', '/admin/user-pages');

@@ -202,7 +202,7 @@ export default function Contact() {
               />
               <label htmlFor="consent" className="text-sm text-gray-400 leading-relaxed cursor-pointer">
                 Я согласен с{' '}
-                <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline underline-offset-2 hover:text-purple-400 transition-colors">
+                <a href="/pages/privacy" target="_blank" rel="noopener noreferrer" className="text-cyan-400 underline underline-offset-2 hover:text-purple-400 transition-colors">
                   политикой конфиденциальности
                 </a>
                 {' '}и даю согласие на обработку персональных данных
