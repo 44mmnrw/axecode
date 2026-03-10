@@ -1,9 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SeoDKeywordLandingController;
 use App\Http\Controllers\UserPageController;
+use App\Models\BlogPost;
 use App\Models\UserPage;
 use App\Support\SeoDKeywordLanding;
 
@@ -48,6 +50,11 @@ Route::get('/d', [SeoDKeywordLandingController::class, 'index']);
 Route::get('/d/{slug}', [SeoDKeywordLandingController::class, 'show'])
     ->where('slug', '[A-Za-z0-9\-]+');
 
+// Блог
+Route::get('/blog', [BlogController::class, 'index']);
+Route::get('/blog/{slug}', [BlogController::class, 'show'])
+    ->where('slug', '[A-Za-z0-9\-]+');
+
 // Sitemap
 Route::get('/sitemap.xml', function () {
     $url = config('app.url');
@@ -75,6 +82,21 @@ Route::get('/sitemap.xml', function () {
                 . '<lastmod>' . $lastmod . '</lastmod>'
                 . '<changefreq>monthly</changefreq>'
                 . '<priority>0.5</priority>'
+                . '</url>';
+        })
+        ->implode('');
+
+    $blogPostsXml = BlogPost::query()
+        ->published()
+        ->get(['slug', 'updated_at', 'published_at'])
+        ->map(function (BlogPost $post) {
+            $lastmod = ($post->updated_at ?? $post->published_at ?? now())->toAtomString();
+
+            return '<url>'
+                . '<loc>' . config('app.url') . '/blog/' . $post->slug . '</loc>'
+                . '<lastmod>' . $lastmod . '</lastmod>'
+                . '<changefreq>monthly</changefreq>'
+                . '<priority>0.6</priority>'
                 . '</url>';
         })
         ->implode('');
@@ -124,6 +146,12 @@ Route::get('/sitemap.xml', function () {
         .   '<priority>0.6</priority>'
         . '</url>'
         . '<url>'
+        .   '<loc>' . $url . '/blog</loc>'
+        .   '<lastmod>' . $lastmod . '</lastmod>'
+        .   '<changefreq>weekly</changefreq>'
+        .   '<priority>0.7</priority>'
+        . '</url>'
+        . '<url>'
         .   '<loc>' . $url . '/tehnicheskaya-podderzhka-sayta</loc>'
         .   '<lastmod>' . $lastmod . '</lastmod>'
         .   '<changefreq>weekly</changefreq>'
@@ -131,6 +159,7 @@ Route::get('/sitemap.xml', function () {
         . '</url>'
         . $pagesXml
         . $dKeywordPagesXml
+        . $blogPostsXml
         . '</urlset>';
 
     return response($xml, 200)->header('Content-Type', 'application/xml');
@@ -144,3 +173,4 @@ Route::redirect('/auth/login', '/admin/login')->name('login');
 Route::redirect('/admin/messages', '/admin/contact-messages');
 Route::redirect('/admin/analytics', '/admin/analytics-settings');
 Route::redirect('/admin/privacy', '/admin/user-pages');
+Route::redirect('/admin/blog', '/admin/blog-posts');
