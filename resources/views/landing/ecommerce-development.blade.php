@@ -33,6 +33,12 @@
     @vite(['resources/css/app.css'])
 
     @php
+        $seoPage = \App\Models\SeoKeywordPage::query()
+            ->where('used_for', '/razrabotka-internet-magazina')
+            ->first();
+
+        $heroDescription = (string) ($seoPage?->description ?: 'Создаём интернет-магазины, которые помогают стабильно расти в продажах: продуманный каталог, удобный checkout, интеграции с CRM/ERP и сквозной аналитикой.');
+
         $baseUrl = config('app.url');
         $jsonLd = [
             '@context' => 'https://schema.org',
@@ -63,7 +69,7 @@
         <div class="mx-auto max-w-6xl px-6">
             <p class="text-cyan-300 text-sm mb-4">E-commerce решения</p>
             <h1 class="text-4xl md:text-5xl font-bold leading-tight max-w-4xl">Разработка интернет-магазина под ключ</h1>
-            <p class="text-gray-300 text-lg mt-6 max-w-3xl">Создаём интернет-магазины, которые помогают стабильно расти в продажах: продуманный каталог, удобный checkout, интеграции с CRM/ERP и сквозной аналитикой.</p>
+            <p class="text-gray-300 text-lg mt-6 max-w-3xl">{{ $heroDescription }}</p>
         </div>
     </section>
 

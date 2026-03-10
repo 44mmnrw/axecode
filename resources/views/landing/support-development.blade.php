@@ -33,6 +33,12 @@
     @vite(['resources/css/app.css'])
 
     @php
+        $seoPage = \App\Models\SeoKeywordPage::query()
+            ->where('used_for', '/tehnicheskaya-podderzhka-sayta')
+            ->first();
+
+        $heroDescription = (string) ($seoPage?->description ?: 'Берём проект на сопровождение после запуска: быстро закрываем инциденты, развиваем функционал и следим, чтобы сайт работал стабильно и без просадок.');
+
         $baseUrl = config('app.url');
         $jsonLd = [
             '@context' => 'https://schema.org',
@@ -63,7 +69,7 @@
         <div class="mx-auto max-w-6xl px-6">
             <p class="text-cyan-300 text-sm mb-4">Поддержка и развитие</p>
             <h1 class="text-4xl md:text-5xl font-bold leading-tight max-w-4xl">Техническая поддержка и сопровождение сайта</h1>
-            <p class="text-gray-300 text-lg mt-6 max-w-3xl">Берём проект на сопровождение после запуска: быстро закрываем инциденты, развиваем функционал и следим, чтобы сайт работал стабильно и без просадок.</p>
+            <p class="text-gray-300 text-lg mt-6 max-w-3xl">{{ $heroDescription }}</p>
         </div>
     </section>
 

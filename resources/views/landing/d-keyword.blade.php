@@ -11,6 +11,20 @@
         $title = mb_convert_case($phrase, MB_CASE_TITLE, 'UTF-8') . ' — Axecode';
         $description = "{$phrase} от Axecode: проектируем, разрабатываем и запускаем решение под задачи бизнеса. Прозрачные сроки, понятный бюджет и поддержка после релиза.";
 
+        $seoPage = \App\Models\SeoKeywordPage::query()
+            ->where('used_for', '/d/' . (string) $item['slug'])
+            ->first();
+
+        if ($seoPage === null) {
+            $seoPage = \App\Models\SeoKeywordPage::query()
+                ->where('keyword', (string) $phrase)
+                ->first();
+        }
+
+        $heroHeading = (string) ($seoPage?->h1 ?: mb_convert_case($phrase, MB_CASE_TITLE, 'UTF-8'));
+
+        $heroDescription = (string) ($seoPage?->description ?: 'Поможем запустить решение под ваши цели: разберём требования, предложим оптимальный формат разработки, согласуем сроки и бюджет, а после запуска останемся на связи для развития и поддержки продукта.');
+
         $landingServices = json_decode((string) \App\Models\Setting::get('landing_services_json', ''), true);
         $landingFaq = json_decode((string) \App\Models\Setting::get('landing_faq_json', ''), true);
         $landingContent = [
@@ -67,13 +81,14 @@
     <script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
 </head>
 <body class="min-h-screen bg-[#020618] text-white antialiased">
+@include('partials.site-header')
+
 <main>
     <section id="home" class="pt-28 pb-20">
         <div class="mx-auto max-w-6xl px-6">
-            <h1 class="text-4xl md:text-5xl font-bold leading-tight max-w-4xl">{{ mb_convert_case($phrase, MB_CASE_TITLE, 'UTF-8') }}</h1>
+            <h1 class="text-4xl md:text-5xl font-bold leading-tight max-w-4xl">{{ $heroHeading }}</h1>
             <p class="text-gray-300 text-lg mt-6 max-w-3xl">
-                Поможем запустить решение под ваши цели: разберём требования, предложим оптимальный формат разработки,
-                согласуем сроки и бюджет, а после запуска останемся на связи для развития и поддержки продукта.
+                {{ $heroDescription }}
             </p>
             <a href="/#contact" class="inline-block mt-8 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 px-8 py-3 font-semibold text-white hover:from-cyan-300 hover:to-purple-500 transition-all">
                 Обсудить проект

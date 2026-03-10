@@ -33,6 +33,12 @@
     @vite(['resources/css/app.css'])
 
     @php
+        $seoPage = \App\Models\SeoKeywordPage::query()
+            ->where('used_for', '/razrabotka-veb-prilozheniy')
+            ->first();
+
+        $heroDescription = (string) ($seoPage?->description ?: 'Проектируем и разрабатываем веб-продукты, которые автоматизируют процессы и помогают бизнесу масштабироваться: CRM, личные кабинеты, SaaS-сервисы, клиентские и внутренние порталы.');
+
         $baseUrl = config('app.url');
         $jsonLd = [
             '@context' => 'https://schema.org',
@@ -65,8 +71,7 @@
             <p class="text-cyan-300 text-sm mb-4">Услуги Axecode</p>
             <h1 class="text-4xl md:text-5xl font-bold leading-tight max-w-4xl">Разработка веб-приложений под ключ</h1>
             <p class="text-gray-300 text-lg mt-6 max-w-3xl">
-                Проектируем и разрабатываем веб-продукты, которые автоматизируют процессы и помогают бизнесу масштабироваться:
-                CRM, личные кабинеты, SaaS-сервисы, клиентские и внутренние порталы.
+                {{ $heroDescription }}
             </p>
         </div>
     </section>

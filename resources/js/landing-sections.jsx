@@ -1,7 +1,6 @@
 import './bootstrap';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Navigation from './components/Navigation';
 import Services from './components/Services';
 import Portfolio from './components/Portfolio';
 import About from './components/About';
@@ -29,7 +28,6 @@ function mount() {
   ReactDOM.createRoot(rootElement).render(
     <React.StrictMode>
       <div className="min-h-screen bg-[#020618] text-white">
-        <Navigation />
         <Services content={landingContent?.services ?? null} />
         <Portfolio />
         <About />

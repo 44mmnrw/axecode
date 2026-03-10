@@ -33,6 +33,12 @@
     @vite(['resources/css/app.css'])
 
     @php
+        $seoPage = \App\Models\SeoKeywordPage::query()
+            ->where('used_for', '/razrabotka-mobilnyh-prilozheniy')
+            ->first();
+
+        $heroDescription = (string) ($seoPage?->description ?: 'Создаём мобильные приложения, которые решают конкретные бизнес-задачи: от клиентских сервисов до внутренних инструментов. Помогаем пройти путь от идеи и прототипа до публикации и дальнейшего развития продукта.');
+
         $baseUrl = config('app.url');
         $jsonLd = [
             '@context' => 'https://schema.org',
@@ -65,8 +71,7 @@
             <p class="text-cyan-300 text-sm mb-4">Услуги Axecode</p>
             <h1 class="text-4xl md:text-5xl font-bold leading-tight max-w-4xl">Разработка мобильных приложений iOS и Android</h1>
             <p class="text-gray-300 text-lg mt-6 max-w-3xl">
-                Создаём мобильные приложения, которые решают конкретные бизнес-задачи: от клиентских сервисов до внутренних инструментов.
-                Помогаем пройти путь от идеи и прототипа до публикации и дальнейшего развития продукта.
+                {{ $heroDescription }}
             </p>
         </div>
     </section>

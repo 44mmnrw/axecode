@@ -232,6 +232,8 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     @endif
 
+    @include('partials.site-header')
+
     {{-- ─── SEO prerender: контент для поисковиков без JavaScript ─────── --}}
     {{-- Показывается только если JS отключён (noscript), но боты         --}}
     {{-- без JS тоже видят этот контент и индексируют его.                --}}
