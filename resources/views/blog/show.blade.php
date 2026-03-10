@@ -47,7 +47,7 @@
         {{ optional($post->published_at ?? $post->created_at)->format('d.m.Y') }}
     </p>
 
-    <article class="prose prose-invert prose-headings:text-white prose-p:text-gray-200 prose-a:text-cyan-300 max-w-none mt-8">
+    <article class="max-w-none mt-8 text-gray-200 leading-relaxed [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:text-white [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-white [&_p]:my-4 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-2 [&_a]:text-cyan-300 [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-cyan-200">
         {!! $post->content !!}
     </article>
 </main>
