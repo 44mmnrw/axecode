@@ -5,6 +5,7 @@ namespace App\Filament\Resources\SeoKeywordPages\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -27,6 +28,18 @@ class SeoKeywordPagesTable
                 TextColumn::make('frequency')
                     ->label('Частотность')
                     ->sortable(),
+                BadgeColumn::make('coverage_status')
+                    ->label('Покрытие')
+                    ->colors([
+                        'success' => 'covered',
+                        'warning' => 'partial',
+                        'danger' => 'missing',
+                    ])
+                    ->sortable(),
+                TextColumn::make('priority_score')
+                    ->label('Приоритет')
+                    ->sortable()
+                    ->toggleable(),
                 TextColumn::make('description')
                     ->label('Текст абзаца')
                     ->limit(80)

@@ -92,6 +92,18 @@
             <a href="/#contact" class="inline-block mt-8 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 px-8 py-3 font-semibold text-white hover:from-cyan-300 hover:to-purple-500 transition-all">Подобрать формат поддержки</a>
         </div>
     </section>
+
+    @include('partials.blog-articles-section', [
+        'heading' => 'Статьи о поддержке и развитии проектов',
+        'slugs'   => [
+            'soprovozhdenie-sayta-chto-i-zachem',
+            'tehnicheskaya-podderzhka-saita-chto-vhodit',
+            'razvitie-i-soprovozhdenie-proekta-posle-zapuska',
+            'ci-cd-pipeline-kak-avtomatizaciya-deploya-zashchishchaet',
+            'docker-i-konteynerizaciya-dlya-proekta',
+            'veb-analitika-s-nulya-chto-nastroit',
+        ],
+    ])
 </main>
 @include('partials.site-footer')
 </body>

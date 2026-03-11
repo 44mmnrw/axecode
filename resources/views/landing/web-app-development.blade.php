@@ -119,6 +119,18 @@
             </div>
         </div>
     </section>
+
+    @include('partials.blog-articles-section', [
+        'heading' => 'Полезные статьи о разработке веб-приложений',
+        'slugs'   => [
+            'razrabotka-onlain-servisa-i-saas-mvp',
+            'razrabotka-lichnogo-kabineta-arhitektura-roli-bezopasnost',
+            'razrabotka-saas-ot-arhitektury-do-pervyh-klientov',
+            'bezopasnost-api-chto-dolzhen-znat-zakazchik',
+            'mikroservisy-ili-monolit-kak-vybrat-arhitekturu',
+            'razrabotka-veb-servisa-api-integracii-arhitektura',
+        ],
+    ])
 </main>
 @include('partials.site-footer')
 </body>

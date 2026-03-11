@@ -120,6 +120,18 @@
             </div>
         </div>
     </section>
+
+    @include('partials.blog-articles-section', [
+        'heading' => 'Полезные статьи о мобильной разработке',
+        'slugs'   => [
+            'razrabotka-mobilnogo-prilozheniya-ios-android',
+            'flutter-razrabotka-v-2026-kogda-opravdana',
+            'skolko-stoit-razrabotka-mobilnogo-prilozheniya-2026',
+            'react-native-vs-flutter-sravnenie-2026',
+            'monetizaciya-mobilnogo-prilozheniya-modeli',
+            'arhitektura-mobilnogo-prilozheniya-patterny',
+        ],
+    ])
 </main>
 @include('partials.site-footer')
 </body>

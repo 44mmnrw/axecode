@@ -51,7 +51,7 @@ echo   OK
 echo.
 echo [2/3] Deploy on server...
 echo.
-ssh %SERVER% "set -e; cd %DEPLOY_PATH% && git fetch origin && git checkout %BRANCH% && git pull origin %BRANCH% && npm install --silent && npm run build && (%PHP% %COMPOSER% install --no-dev --optimize-autoloader --quiet || %PHP% %COMPOSER% install --no-dev --optimize-autoloader --quiet --ignore-platform-req=ext-intl) && %PHP% artisan migrate --force && (%PHP% artisan db:seed --class=AdminSeeder --force || true) && %PHP% artisan db:seed --class=SeoKeywordPagesSeeder --force && %PHP% artisan optimize:clear && %PHP% artisan optimize && echo DEPLOY_OK"
+ssh %SERVER% "set -e; cd %DEPLOY_PATH% && git fetch origin && git checkout %BRANCH% && git pull origin %BRANCH% && npm install --silent && npm run build && (%PHP% %COMPOSER% install --no-dev --optimize-autoloader --quiet || %PHP% %COMPOSER% install --no-dev --optimize-autoloader --quiet --ignore-platform-req=ext-intl) && %PHP% artisan migrate --force && (%PHP% artisan db:seed --class=AdminSeeder --force || true) && %PHP% artisan db:seed --class=SeoKeywordPagesSeeder --force && (%PHP% artisan db:seed --class=DClusterBlogPostsSeeder --force || true) && (%PHP% artisan db:seed --class=DClusterBlogPostsPart2Seeder --force || true) && (%PHP% artisan db:seed --class=DClusterBlogPostsPart3Seeder --force || true) && (%PHP% artisan db:seed --class=DClusterBlogPostsPart4Seeder --force || true) && (%PHP% artisan db:seed --class=DClusterBlogPostsPart5Seeder --force || true) && %PHP% artisan optimize:clear && %PHP% artisan optimize && echo DEPLOY_OK"
 if errorlevel 1 (
     echo.
     echo [ERROR] Server deploy failed.

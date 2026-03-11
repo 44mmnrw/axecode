@@ -27,6 +27,25 @@
     <h1 class="text-3xl md:text-4xl font-bold">Блог Axecode</h1>
     <p class="text-gray-300 mt-4 max-w-3xl">Пишем о том, как запускать сайты и приложения без хаоса: архитектура, UX, SEO и реальные рабочие подходы.</p>
 
+    {{-- ── Навигация по категориям ──────────────────────────────────────── --}}
+    <nav class="mt-8 flex flex-wrap gap-2" aria-label="Категории блога">
+        <a href="/blog" class="rounded-full border border-white/20 px-4 py-1.5 text-sm text-gray-300 hover:border-cyan-400/60 hover:text-cyan-300 transition-colors">Все статьи</a>
+        <a href="/blog?category=guides-and-analytics" class="rounded-full border border-white/20 px-4 py-1.5 text-sm text-gray-300 hover:border-cyan-400/60 hover:text-cyan-300 transition-colors">Гайды и аналитика</a>
+        <a href="/blog?category=mobile-development" class="rounded-full border border-white/20 px-4 py-1.5 text-sm text-gray-300 hover:border-cyan-400/60 hover:text-cyan-300 transition-colors">Мобильная разработка</a>
+        <a href="/blog?category=design-and-ux" class="rounded-full border border-white/20 px-4 py-1.5 text-sm text-gray-300 hover:border-cyan-400/60 hover:text-cyan-300 transition-colors">Дизайн и UX</a>
+        <a href="/blog?category=technologies" class="rounded-full border border-white/20 px-4 py-1.5 text-sm text-gray-300 hover:border-cyan-400/60 hover:text-cyan-300 transition-colors">Технологии</a>
+    </nav>
+
+    {{-- ── Ссылки на услуги ─────────────────────────────────────────────── --}}
+    <div class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1">
+        <span class="text-xs text-gray-500">Наши услуги:</span>
+        <a href="/razrabotka-saitov-pod-klyuch"   class="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">Сайты →</a>
+        <a href="/razrabotka-veb-prilozheniy"      class="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">Веб-приложения →</a>
+        <a href="/razrabotka-mobilnyh-prilozheniy" class="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">Мобильные приложения →</a>
+        <a href="/razrabotka-internet-magazina"    class="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">Интернет-магазины →</a>
+        <a href="/tehnicheskaya-podderzhka-sayta"  class="text-xs text-cyan-400 hover:text-cyan-300 transition-colors">Поддержка →</a>
+    </div>
+
     <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         @forelse($posts as $post)
             <article class="rounded-2xl border border-white/10 p-5 bg-white/[0.02] hover:border-cyan-400/60 transition-colors">

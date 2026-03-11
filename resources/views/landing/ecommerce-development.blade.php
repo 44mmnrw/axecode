@@ -92,6 +92,18 @@
             <a href="/#contact" class="inline-block mt-8 rounded-full bg-gradient-to-r from-cyan-400 to-purple-600 px-8 py-3 font-semibold text-white hover:from-cyan-300 hover:to-purple-500 transition-all">Запросить оценку проекта</a>
         </div>
     </section>
+
+    @include('partials.blog-articles-section', [
+        'heading' => 'Полезные статьи об интернет-магазинах',
+        'slugs'   => [
+            'internet-magazin-pod-klyuch-9-shagov',
+            'razrabotka-marketpleisa-arhitektura-i-otlichiya',
+            'integraciya-crm-s-saytom-zachem-i-kak',
+            'stoimost-razrabotki-saita-struktura-smety',
+            'veb-analitika-s-nulya-chto-nastroit',
+            'seo-v-razrabotke-chto-zakladyvat-v-tz',
+        ],
+    ])
 </main>
 @include('partials.site-footer')
 </body>

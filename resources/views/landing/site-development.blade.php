@@ -168,6 +168,18 @@
             </div>
         </div>
     </section>
+
+    @include('partials.blog-articles-section', [
+        'heading' => 'Полезные статьи о разработке сайтов',
+        'slugs'   => [
+            'razrabotka-lendinga-v-2026-rezultat-i-byudzhet',
+            'stoimost-razrabotki-saita-struktura-smety',
+            'tehnicheskoe-zadanie-na-sayt-kak-napisat',
+            'seo-v-razrabotke-chto-zakladyvat-v-tz',
+            'kak-vybrat-veb-studiyu-chek-list-dlya-ocenki',
+            'priemka-sayta-chekList-zakazchika',
+        ],
+    ])
 </main>
 
 @include('partials.site-footer')

@@ -30,6 +30,10 @@ class SeoKeywordPageForm
                     ->required()
                     ->maxLength(255),
 
+                TextInput::make('target_url')
+                    ->label('Target URL (рассчитывается аудитом)')
+                    ->maxLength(255),
+
                 TextInput::make('frequency')
                     ->label('Частотность')
                     ->required()
@@ -78,6 +82,26 @@ class SeoKeywordPageForm
                 Toggle::make('is_active')
                     ->label('Активно')
                     ->default(true),
+
+                TextInput::make('coverage_status')
+                    ->label('Статус покрытия')
+                    ->disabled(),
+
+                Toggle::make('has_landing_page')
+                    ->label('Есть посадочная')
+                    ->disabled(),
+
+                Toggle::make('has_meta')
+                    ->label('Есть мета')
+                    ->disabled(),
+
+                Toggle::make('has_content')
+                    ->label('Есть контент')
+                    ->disabled(),
+
+                TextInput::make('priority_score')
+                    ->label('Приоритет доработки')
+                    ->disabled(),
             ]);
     }
 }

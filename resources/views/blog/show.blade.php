@@ -50,7 +50,48 @@
     <article class="max-w-none mt-8 text-gray-200 leading-relaxed [&_h2]:mt-10 [&_h2]:mb-4 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:text-white [&_h3]:mt-8 [&_h3]:mb-3 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-white [&_p]:my-4 [&_ul]:my-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:my-4 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-2 [&_a]:text-cyan-300 [&_a]:underline [&_a]:underline-offset-2 hover:[&_a]:text-cyan-200">
         {!! $post->content !!}
     </article>
+
+    {{-- ── Наши услуги ─────────────────────────────────────────────────── --}}
+    @if(!empty($serviceLinks))
+    <aside class="mt-14 rounded-2xl border border-cyan-400/20 bg-cyan-400/5 p-6">
+        <p class="text-xs uppercase tracking-widest text-cyan-400 mb-4">Наши услуги</p>
+        <div class="flex flex-wrap gap-3">
+            @foreach($serviceLinks as $link)
+                <a href="{{ $link['href'] }}"
+                   class="inline-block rounded-full border border-white/20 px-4 py-2 text-sm text-gray-200 hover:border-cyan-400/60 hover:text-cyan-300 transition-colors no-underline">
+                    {{ $link['title'] }} →
+                </a>
+            @endforeach
+        </div>
+    </aside>
+    @endif
 </main>
+
+{{-- ── Читайте также ────────────────────────────────────────────────────── --}}
+@if($relatedPosts->isNotEmpty())
+<section class="border-t border-white/5 py-16">
+    <div class="mx-auto max-w-4xl px-6">
+        <h2 class="text-2xl font-semibold mb-8">Читайте также</h2>
+        <div class="grid gap-5 sm:grid-cols-2">
+            @foreach($relatedPosts as $related)
+                <article class="rounded-2xl border border-white/10 p-5 bg-white/[0.02] hover:border-cyan-400/60 transition-colors">
+                    <h3 class="text-base font-semibold leading-snug">
+                        <a href="{{ url('/blog/' . $related->slug) }}" class="hover:text-cyan-300 transition-colors">
+                            {{ $related->title }}
+                        </a>
+                    </h3>
+                    @if($related->excerpt)
+                        <p class="mt-2 text-sm text-gray-400 line-clamp-2">{{ $related->excerpt }}</p>
+                    @endif
+                </article>
+            @endforeach
+        </div>
+        <div class="mt-8">
+            <a href="/blog" class="text-sm text-cyan-300 hover:text-cyan-200 transition-colors">← Все статьи блога</a>
+        </div>
+    </div>
+</section>
+@endif
 
 @include('partials.site-footer', ['privacyLink' => '/privacy'])
 </body>

@@ -45,4 +45,10 @@ return [
         'api_base_url' => env('YANDEX_WORDSTAT_API_BASE_URL', ''),
     ],
 
+    'yandex_metrika' => [
+        'client_id' => env('YANDEX_METRIKA_CLIENT_ID'),
+        'client_secret' => env('YANDEX_METRIKA_CLIENT_SECRET'),
+        'access_token' => env('YANDEX_METRIKA_ACCESS_TOKEN'),
+    ],
+
 ];
