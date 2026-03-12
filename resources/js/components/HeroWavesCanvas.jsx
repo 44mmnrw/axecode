@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 
 
@@ -11,12 +11,16 @@ export default function HeroWavesCanvas({
   yOffset = 0.15,
   fallback = null,
 }) {
+  const wrapperRef = useRef(null);
   const canvasRef = useRef(null);
   const animationFrameRef = useRef(null);
+  const shouldRenderRef = useRef(true);
+  const lastFrameTimeRef = useRef(0);
   const startTimeRef = useRef(Date.now());
   const glRef = useRef(null);
   const programRef = useRef(null);
   const uniformLocationsRef = useRef({});
+  const [fallbackMode, setFallbackMode] = useState(false);
 
   // Vertex shader
   const vertexShaderSource = `
@@ -169,8 +173,9 @@ export default function HeroWavesCanvas({
 
     if (!canvas || !gl) return;
 
-    const displayWidth = canvas.clientWidth;
-    const displayHeight = canvas.clientHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
+    const displayWidth = Math.floor(canvas.clientWidth * dpr);
+    const displayHeight = Math.floor(canvas.clientHeight * dpr);
 
     if (canvas.width !== displayWidth || canvas.height !== displayHeight) {
       canvas.width = displayWidth;
@@ -180,12 +185,24 @@ export default function HeroWavesCanvas({
   };
 
   // Render loop
-  const render = () => {
+  const render = (now) => {
     const gl = glRef.current;
     const program = programRef.current;
     const uniforms = uniformLocationsRef.current;
 
     if (!gl || !program) return;
+
+    if (!shouldRenderRef.current) {
+      animationFrameRef.current = requestAnimationFrame(render);
+      return;
+    }
+
+    const FRAME_BUDGET = 1000 / 30;
+    if (now - lastFrameTimeRef.current < FRAME_BUDGET) {
+      animationFrameRef.current = requestAnimationFrame(render);
+      return;
+    }
+    lastFrameTimeRef.current = now;
 
     const currentTime = Date.now();
     const elapsedTime = (currentTime - startTimeRef.current) / 1000;
@@ -216,19 +233,51 @@ export default function HeroWavesCanvas({
   };
 
   useEffect(() => {
-    if (initWebGL()) {
-      handleResize();
-      render();
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const hardwareThreads = Number(navigator.hardwareConcurrency || 0);
+    const deviceMemory = Number(navigator.deviceMemory || 0);
+    const lowEndDevice = (hardwareThreads > 0 && hardwareThreads <= 4) || (deviceMemory > 0 && deviceMemory <= 4);
 
-      window.addEventListener('resize', handleResize);
-
-      return () => {
-        window.removeEventListener('resize', handleResize);
-        if (animationFrameRef.current) {
-          cancelAnimationFrame(animationFrameRef.current);
-        }
-      };
+    if (prefersReducedMotion || lowEndDevice) {
+      setFallbackMode(true);
+      return undefined;
     }
+
+    if (!initWebGL()) {
+      setFallbackMode(true);
+      return undefined;
+    }
+
+    handleResize();
+
+    const updateVisibility = () => {
+      shouldRenderRef.current = document.visibilityState === 'visible';
+    };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const isVisible = Boolean(entry?.isIntersecting);
+        shouldRenderRef.current = isVisible && document.visibilityState === 'visible';
+      },
+      { threshold: 0.05 }
+    );
+
+    if (wrapperRef.current) {
+      observer.observe(wrapperRef.current);
+    }
+
+    document.addEventListener('visibilitychange', updateVisibility);
+    window.addEventListener('resize', handleResize);
+    animationFrameRef.current = requestAnimationFrame(render);
+
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', updateVisibility);
+      window.removeEventListener('resize', handleResize);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
   }, []);
 
   // Update uniforms
@@ -244,8 +293,13 @@ export default function HeroWavesCanvas({
     }
   }, [speed, lineCount, amplitude, yOffset]);
 
+  if (fallbackMode) {
+    return fallback;
+  }
+
   return (
     <div
+      ref={wrapperRef}
       className="pointer-events-none absolute inset-0 z-0 overflow-hidden"
       aria-hidden="true"
     >
