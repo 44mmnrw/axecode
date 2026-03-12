@@ -20,6 +20,7 @@ export default function HeroWavesCanvas({
   const glRef = useRef(null);
   const programRef = useRef(null);
   const uniformLocationsRef = useRef({});
+  const [mobileDisabled, setMobileDisabled] = useState(false);
   const [fallbackMode, setFallbackMode] = useState(false);
 
   // Vertex shader
@@ -239,7 +240,12 @@ export default function HeroWavesCanvas({
     const deviceMemory = Number(navigator.deviceMemory || 0);
     const lowEndDevice = (hardwareThreads > 0 && hardwareThreads <= 4) || (deviceMemory > 0 && deviceMemory <= 4);
 
-    if (isMobileViewport || prefersReducedMotion || lowEndDevice) {
+    if (isMobileViewport) {
+      setMobileDisabled(true);
+      return undefined;
+    }
+
+    if (prefersReducedMotion || lowEndDevice) {
       setFallbackMode(true);
       return undefined;
     }
@@ -296,6 +302,10 @@ export default function HeroWavesCanvas({
 
   if (fallbackMode) {
     return fallback;
+  }
+
+  if (mobileDisabled) {
+    return null;
   }
 
   return (
