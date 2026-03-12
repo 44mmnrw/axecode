@@ -233,12 +233,13 @@ export default function HeroWavesCanvas({
   };
 
   useEffect(() => {
+    const isMobileViewport = window.matchMedia('(max-width: 767px)').matches;
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const hardwareThreads = Number(navigator.hardwareConcurrency || 0);
     const deviceMemory = Number(navigator.deviceMemory || 0);
     const lowEndDevice = (hardwareThreads > 0 && hardwareThreads <= 4) || (deviceMemory > 0 && deviceMemory <= 4);
 
-    if (prefersReducedMotion || lowEndDevice) {
+    if (isMobileViewport || prefersReducedMotion || lowEndDevice) {
       setFallbackMode(true);
       return undefined;
     }
