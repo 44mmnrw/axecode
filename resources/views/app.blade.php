@@ -236,7 +236,6 @@
                     'name'        => $schemaOrgName,
                     'url'         => $baseUrl,
                     'description' => $schemaOrgDescription,
-                    'provider'    => ['@id' => $baseUrl . '/#organization'],
                     'areaServed'  => $schemaOrgAreaServed,
                     'hasOfferCatalog' => [
                         '@type'           => 'OfferCatalog',

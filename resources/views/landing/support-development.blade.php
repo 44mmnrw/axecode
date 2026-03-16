@@ -44,13 +44,17 @@
             '@context' => 'https://schema.org',
             '@graph' => [
                 [
+                    '@type' => 'Organization',
+                    '@id' => $baseUrl . '/#organization',
+                    'name' => 'Axecode',
+                    'url' => $baseUrl,
+                ],
+                [
                     '@type' => 'Service',
                     'name' => 'Техническая поддержка и сопровождение сайта',
                     'serviceType' => 'Website support',
                     'provider' => [
-                        '@type' => 'Organization',
-                        'name' => 'Axecode',
-                        'url' => $baseUrl,
+                        '@id' => $baseUrl . '/#organization',
                     ],
                     'areaServed' => 'RU',
                     'url' => $baseUrl . '/tehnicheskaya-podderzhka-sayta',

@@ -44,13 +44,17 @@
             '@context' => 'https://schema.org',
             '@graph' => [
                 [
+                    '@type' => 'Organization',
+                    '@id' => $baseUrl . '/#organization',
+                    'name' => 'Axecode',
+                    'url' => $baseUrl,
+                ],
+                [
                     '@type' => 'Service',
                     'name' => 'Разработка интернет-магазина под ключ',
                     'serviceType' => 'E-commerce development',
                     'provider' => [
-                        '@type' => 'Organization',
-                        'name' => 'Axecode',
-                        'url' => $baseUrl,
+                        '@id' => $baseUrl . '/#organization',
                     ],
                     'areaServed' => 'RU',
                     'url' => $baseUrl . '/razrabotka-internet-magazina',

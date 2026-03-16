@@ -32,17 +32,23 @@
             'faq' => is_array($landingFaq) ? $landingFaq : null,
         ];
 
+        $baseUrl = config('app.url');
+
         $jsonLd = [
             '@context' => 'https://schema.org',
             '@graph' => [
+                [
+                    '@type' => 'Organization',
+                    '@id' => $baseUrl . '/#organization',
+                    'name' => 'Axecode',
+                    'url' => $baseUrl,
+                ],
                 [
                     '@type' => 'Service',
                     'name' => $phrase,
                     'serviceType' => 'Custom software development',
                     'provider' => [
-                        '@type' => 'Organization',
-                        'name' => 'Axecode',
-                        'url' => config('app.url'),
+                        '@id' => $baseUrl . '/#organization',
                     ],
                     'areaServed' => 'RU',
                     'url' => $url,
