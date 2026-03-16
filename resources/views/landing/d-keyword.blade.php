@@ -8,7 +8,7 @@
         $phrase    = $item['phrase'];
         $frequency = (int) ($item['totalCount'] ?? 0);
         $url       = config('app.url') . '/d/' . $item['slug'];
-        $title = mb_convert_case($phrase, MB_CASE_TITLE, 'UTF-8') . ' — Axecode';
+        $title = mb_convert_case($phrase, MB_CASE_TITLE, 'UTF-8') . ' — цена и сроки разработки | Axecode';
         $description = "{$phrase} от Axecode: проектируем, разрабатываем и запускаем решение под задачи бизнеса. Прозрачные сроки, понятный бюджет и поддержка после релиза.";
 
         $seoPage = \App\Models\SeoKeywordPage::query()
