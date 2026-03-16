@@ -137,22 +137,76 @@
     {{-- ─── Schema.org JSON-LD ─────────────────────────────────────────── --}}
     @php
         $baseUrl = config('app.url');
+
+        // — Organization: данные из админки (Настройки → Schema.org) —
+        $schemaOrgName         = (string) \App\Models\Setting::get('schema_org_name', 'Axecode');
+        $schemaOrgDescription  = (string) \App\Models\Setting::get('schema_org_description', 'Веб-студия полного цикла: разработка сайтов под ключ, веб-приложений и мобильных приложений, UI/UX дизайн, техподдержка и SEO-оптимизация.');
+        $schemaOrgFoundingDate = (string) \App\Models\Setting::get('schema_org_founding_date', '2019');
+        $schemaOrgTelephone    = (string) \App\Models\Setting::get('schema_org_telephone', '+7-495-109-25-44');
+        $schemaOrgEmail        = (string) \App\Models\Setting::get('schema_org_email', 'hello@axecode.tech');
+        $schemaOrgAreaServed   = (string) \App\Models\Setting::get('schema_org_area_served', 'RU');
+        $schemaOrgLogoRaw      = (string) \App\Models\Setting::get('schema_org_logo_path', '/logo.png');
+        $schemaOrgLogoUrl      = (str_starts_with($schemaOrgLogoRaw, 'http://') || str_starts_with($schemaOrgLogoRaw, 'https://'))
+            ? $schemaOrgLogoRaw
+            : $baseUrl . '/' . ltrim($schemaOrgLogoRaw, '/');
+
+        // — Услуги: берём из landing_services_json (Настройки → Контент лендинга) —
+        $schemaServicesRaw   = is_array($landingServices) ? ($landingServices['items'] ?? []) : [];
+        $schemaOfferCatalog  = array_values(array_filter(array_map(
+            fn($item) => isset($item['title']) && $item['title'] !== ''
+                ? ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => $item['title']]]
+                : null,
+            $schemaServicesRaw
+        )));
+        if (empty($schemaOfferCatalog)) {
+            $schemaOfferCatalog = [
+                ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Веб-разработка']],
+                ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Разработка веб-приложений']],
+                ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Мобильные приложения']],
+                ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'UI/UX Дизайн']],
+                ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'SEO-оптимизация']],
+                ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Техподдержка 24/7']],
+            ];
+        }
+
+        // — FAQ: берём из landing_faq_json (Настройки → Контент лендинга) —
+        $schemaFaqRaw  = is_array($landingFaq) ? ($landingFaq['items'] ?? []) : [];
+        $schemaFaqMain = array_values(array_filter(array_map(
+            fn($item) => (isset($item['question']) && $item['question'] !== '' && isset($item['answer']) && $item['answer'] !== '')
+                ? ['@type' => 'Question', 'name' => $item['question'], 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $item['answer']]]
+                : null,
+            $schemaFaqRaw
+        )));
+        if (empty($schemaFaqMain)) {
+            $schemaFaqMain = [
+                ['@type' => 'Question', 'name' => 'Сколько стоит разработка сайта под ключ?',
+                 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Стоимость зависит от типа проекта, функционала и сроков. После брифа формируем прозрачную смету и поэтапный план работ.']],
+                ['@type' => 'Question', 'name' => 'Вы разрабатываете мобильные приложения для iOS и Android?',
+                 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Да, создаём мобильные приложения под iOS и Android: нативные и кроссплатформенные решения в зависимости от целей бизнеса.']],
+                ['@type' => 'Question', 'name' => 'Можно ли заказать редизайн и SEO-оптимизацию существующего сайта?',
+                 'acceptedAnswer' => ['@type' => 'Answer', 'text' => 'Да, выполняем редизайн, техническую SEO-оптимизацию, ускорение загрузки и улучшение структуры сайта под поисковые запросы.']],
+            ];
+        }
+
+        // — WebPage keywords: из seo_keywords (Настройки → SEO и Open Graph) —
+        $schemaKeywordsRaw = array_filter(array_map('trim', explode(',', $seoKeywords)));
+
         $jsonLd = [
             '@context' => 'https://schema.org',
             '@graph'   => [
                 [
-                    '@type'       => 'Organization',
-                    '@id'         => $baseUrl . '/#organization',
-                    'name'        => 'Axecode',
-                    'url'         => $baseUrl,
-                    'logo'        => ['@type' => 'ImageObject', 'url' => $baseUrl . '/logo.png'],
-                    'description' => 'Веб-студия полного цикла: разработка сайтов под ключ, веб-приложений и мобильных приложений, UI/UX дизайн, техподдержка и SEO-оптимизация.',
-                    'foundingDate' => '2019',
+                    '@type'        => 'Organization',
+                    '@id'          => $baseUrl . '/#organization',
+                    'name'         => $schemaOrgName,
+                    'url'          => $baseUrl,
+                    'logo'         => ['@type' => 'ImageObject', 'url' => $schemaOrgLogoUrl],
+                    'description'  => $schemaOrgDescription,
+                    'foundingDate' => $schemaOrgFoundingDate,
                     'contactPoint' => [
-                        '@type' => 'ContactPoint',
-                        'contactType' => 'customer support',
-                        'telephone' => '+7-495-109-25-44',
-                        'email' => 'hello@axecode.tech',
+                        '@type'             => 'ContactPoint',
+                        'contactType'       => 'customer support',
+                        'telephone'         => $schemaOrgTelephone,
+                        'email'             => $schemaOrgEmail,
                         'availableLanguage' => 'Russian',
                     ],
                 ],
@@ -160,7 +214,7 @@
                     '@type'       => 'WebSite',
                     '@id'         => $baseUrl . '/#website',
                     'url'         => $baseUrl,
-                    'name'        => 'Axecode',
+                    'name'        => $schemaOrgName,
                     'description' => 'Разработка сайтов, веб-приложений и мобильных приложений',
                     'publisher'   => ['@id' => $baseUrl . '/#organization'],
                     'inLanguage'  => 'ru-RU',
@@ -169,16 +223,9 @@
                     '@type'       => 'WebPage',
                     '@id'         => $baseUrl . '/#webpage',
                     'url'         => $baseUrl,
-                    'name'        => 'Разработка сайтов и мобильных приложений под ключ — Axecode',
-                    'description' => 'Axecode — веб-студия полного цикла. Разрабатываем сайты, веб-приложения и мобильные приложения, выполняем UX/UI дизайн, интеграции и поддержку.',
-                    'keywords'    => [
-                        'разработка сайтов под ключ',
-                        'разработка веб-приложений',
-                        'мобильные приложения iOS Android',
-                        'UI UX дизайн',
-                        'техническая поддержка сайтов',
-                        'SEO оптимизация сайта',
-                    ],
+                    'name'        => $seoTitle,
+                    'description' => $seoDescription,
+                    'keywords'    => array_values($schemaKeywordsRaw),
                     'isPartOf'    => ['@id' => $baseUrl . '/#website'],
                     'about'       => ['@id' => $baseUrl . '/#organization'],
                     'inLanguage'  => 'ru-RU',
@@ -186,54 +233,21 @@
                 [
                     '@type'       => 'ProfessionalService',
                     '@id'         => $baseUrl . '/#service',
-                    'name'        => 'Axecode',
+                    'name'        => $schemaOrgName,
                     'url'         => $baseUrl,
-                    'description' => 'Создаём цифровые продукты под ключ: сайты, веб-приложения, мобильные приложения, дизайн и поддержку.',
+                    'description' => $schemaOrgDescription,
                     'provider'    => ['@id' => $baseUrl . '/#organization'],
-                    'areaServed'  => 'RU',
+                    'areaServed'  => $schemaOrgAreaServed,
                     'hasOfferCatalog' => [
-                        '@type' => 'OfferCatalog',
-                        'name'  => 'Услуги Axecode',
-                        'itemListElement' => [
-                            ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Веб-разработка']],
-                            ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Разработка веб-приложений']],
-                            ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Мобильные приложения']],
-                            ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'UI/UX Дизайн']],
-                            ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Кастомные решения']],
-                            ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'SEO-оптимизация']],
-                            ['@type' => 'Offer', 'itemOffered' => ['@type' => 'Service', 'name' => 'Техподдержка 24/7']],
-                        ],
+                        '@type'           => 'OfferCatalog',
+                        'name'            => 'Услуги ' . $schemaOrgName,
+                        'itemListElement' => $schemaOfferCatalog,
                     ],
                 ],
                 [
-                    '@type' => 'FAQPage',
-                    '@id' => $baseUrl . '/#faq',
-                    'mainEntity' => [
-                        [
-                            '@type' => 'Question',
-                            'name' => 'Сколько стоит разработка сайта под ключ?',
-                            'acceptedAnswer' => [
-                                '@type' => 'Answer',
-                                'text' => 'Стоимость зависит от типа проекта, функционала и сроков. После брифа формируем прозрачную смету и поэтапный план работ.',
-                            ],
-                        ],
-                        [
-                            '@type' => 'Question',
-                            'name' => 'Вы разрабатываете мобильные приложения для iOS и Android?',
-                            'acceptedAnswer' => [
-                                '@type' => 'Answer',
-                                'text' => 'Да, создаём мобильные приложения под iOS и Android: нативные и кроссплатформенные решения в зависимости от целей бизнеса.',
-                            ],
-                        ],
-                        [
-                            '@type' => 'Question',
-                            'name' => 'Можно ли заказать редизайн и SEO-оптимизацию существующего сайта?',
-                            'acceptedAnswer' => [
-                                '@type' => 'Answer',
-                                'text' => 'Да, выполняем редизайн, техническую SEO-оптимизацию, ускорение загрузки и улучшение структуры сайта под поисковые запросы.',
-                            ],
-                        ],
-                    ],
+                    '@type'      => 'FAQPage',
+                    '@id'        => $baseUrl . '/#faq',
+                    'mainEntity' => $schemaFaqMain,
                 ],
             ],
         ];
