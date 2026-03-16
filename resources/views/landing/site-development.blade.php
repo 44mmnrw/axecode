@@ -31,6 +31,7 @@
     <meta name="msapplication-config" content="/browserconfig.xml">
 
     @vite(['resources/css/app.css'])
+    @include('partials.google-tag')
 
     @php
         $seoPage = \App\Models\SeoKeywordPage::query()

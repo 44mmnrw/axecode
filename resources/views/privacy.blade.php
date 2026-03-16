@@ -17,6 +17,7 @@
     <meta name="msapplication-TileColor" content="#020618">
     <meta name="msapplication-config" content="/browserconfig.xml">
     @vite(['resources/css/app.css'])
+    @include('partials.google-tag')
 </head>
 <body class="min-h-screen bg-[#020618] text-white antialiased">
 

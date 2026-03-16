@@ -92,6 +92,7 @@
     <script type="application/ld+json">{!! json_encode($blogPostingJsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
 
     @vite(['resources/css/app.css'])
+    @include('partials.google-tag')
 </head>
 <body class="min-h-screen bg-[#020618] text-white antialiased">
 @include('partials.site-header', ['actionText' => 'К блогу', 'actionHref' => '/blog'])

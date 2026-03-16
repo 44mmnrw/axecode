@@ -17,6 +17,7 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ config('app.url') }}/d">
     @vite(['resources/css/app.css'])
+    @include('partials.google-tag')
 </head>
 <body class="min-h-screen bg-[#020618] text-white antialiased">
 @include('partials.site-header')

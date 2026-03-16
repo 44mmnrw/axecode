@@ -122,6 +122,7 @@
     <meta name="twitter:image" content="{{ config('app.url') }}/og-image.png">
 
     @vite(['resources/css/app.css', 'resources/js/landing-sections.jsx'])
+    @include('partials.google-tag')
     <script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
 </head>
 <body class="min-h-screen bg-[#020618] text-white antialiased">

@@ -64,6 +64,7 @@
     <script type="application/ld+json">{!! json_encode($blogCollectionJsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
 
     @vite(['resources/css/app.css'])
+    @include('partials.google-tag')
 </head>
 <body class="min-h-screen bg-[#020618] text-white antialiased">
 @include('partials.site-header', ['actionText' => 'На главную', 'actionHref' => '/'])
