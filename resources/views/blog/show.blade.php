@@ -31,6 +31,66 @@
     <meta name="msapplication-TileColor" content="#020618">
     <meta name="msapplication-config" content="/browserconfig.xml">
 
+    @php
+        $publishedIso = optional($post->published_at ?? $post->created_at)?->toAtomString();
+        $updatedIso = optional($post->updated_at ?? $post->published_at ?? $post->created_at)?->toAtomString();
+        $articleBodyText = trim(strip_tags((string) $post->content));
+
+        $blogPostingJsonLd = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'Organization',
+                    '@id' => config('app.url') . '/#organization',
+                    'name' => 'Axecode',
+                    'url' => config('app.url'),
+                    'logo' => [
+                        '@type' => 'ImageObject',
+                        'url' => config('app.url') . '/logo.png',
+                    ],
+                ],
+                [
+                    '@type' => 'WebPage',
+                    '@id' => $url . '#webpage',
+                    'url' => $url,
+                    'name' => $title,
+                    'description' => $description,
+                    'isPartOf' => [
+                        '@id' => config('app.url') . '/#website',
+                    ],
+                    'inLanguage' => 'ru-RU',
+                ],
+                [
+                    '@type' => 'BlogPosting',
+                    '@id' => $url . '#blogposting',
+                    'headline' => $post->title,
+                    'description' => $description,
+                    'articleBody' => $articleBodyText,
+                    'datePublished' => $publishedIso,
+                    'dateModified' => $updatedIso,
+                    'author' => [
+                        '@type' => 'Organization',
+                        'name' => 'Axecode',
+                    ],
+                    'publisher' => [
+                        '@id' => config('app.url') . '/#organization',
+                    ],
+                    'mainEntityOfPage' => [
+                        '@id' => $url . '#webpage',
+                    ],
+                    'url' => $url,
+                    'image' => [
+                        '@type' => 'ImageObject',
+                        'url' => config('app.url') . '/og-image.png',
+                    ],
+                    'inLanguage' => 'ru-RU',
+                    'keywords' => $post->category ? [$post->category->name] : [],
+                ],
+            ],
+        ];
+    @endphp
+    <script type="application/ld+json">{!! json_encode($blogPostingJsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
+
     @vite(['resources/css/app.css'])
 </head>
 <body class="min-h-screen bg-[#020618] text-white antialiased">

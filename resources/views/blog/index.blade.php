@@ -18,6 +18,51 @@
     <meta name="msapplication-TileColor" content="#020618">
     <meta name="msapplication-config" content="/browserconfig.xml">
 
+    @php
+        $blogUrl = config('app.url') . '/blog';
+        $blogItems = [];
+
+        foreach ($posts as $index => $post) {
+            $postUrl = config('app.url') . '/blog/' . $post->slug;
+            $blogItems[] = [
+                '@type' => 'ListItem',
+                'position' => $index + 1,
+                'url' => $postUrl,
+                'name' => $post->title,
+            ];
+        }
+
+        $blogCollectionJsonLd = [
+            '@context' => 'https://schema.org',
+            '@graph' => [
+                [
+                    '@type' => 'WebPage',
+                    '@id' => $blogUrl . '#webpage',
+                    'url' => $blogUrl,
+                    'name' => 'Блог Axecode — статьи о разработке и SEO',
+                    'description' => 'Практические статьи Axecode про разработку сайтов и приложений, SEO и запуск цифровых продуктов.',
+                    'inLanguage' => 'ru-RU',
+                ],
+                [
+                    '@type' => 'CollectionPage',
+                    '@id' => $blogUrl . '#collection',
+                    'url' => $blogUrl,
+                    'name' => 'Блог Axecode',
+                    'description' => 'Архив статей о разработке, UX и SEO.',
+                    'mainEntity' => [
+                        '@type' => 'ItemList',
+                        'itemListElement' => $blogItems,
+                    ],
+                    'isPartOf' => [
+                        '@id' => config('app.url') . '/#website',
+                    ],
+                    'inLanguage' => 'ru-RU',
+                ],
+            ],
+        ];
+    @endphp
+    <script type="application/ld+json">{!! json_encode($blogCollectionJsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}</script>
+
     @vite(['resources/css/app.css'])
 </head>
 <body class="min-h-screen bg-[#020618] text-white antialiased">

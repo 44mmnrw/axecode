@@ -51,6 +51,7 @@
                 ],
                 [
                     '@type' => 'Service',
+                    '@id' => $baseUrl . '/razrabotka-veb-prilozheniy#service',
                     'name' => 'Разработка веб-приложений под ключ',
                     'serviceType' => 'Web application development',
                     'provider' => [
@@ -58,7 +59,42 @@
                     ],
                     'areaServed' => 'RU',
                     'url' => $baseUrl . '/razrabotka-veb-prilozheniy',
+                    'mainEntityOfPage' => [
+                        '@id' => $baseUrl . '/razrabotka-veb-prilozheniy#webpage',
+                    ],
                     'description' => 'Разработка веб-приложений для бизнеса: CRM, SaaS, личные кабинеты, B2B/B2C порталы.',
+                ],
+                [
+                    '@type' => 'WebPage',
+                    '@id' => $baseUrl . '/razrabotka-veb-prilozheniy#webpage',
+                    'url' => $baseUrl . '/razrabotka-veb-prilozheniy',
+                    'name' => 'Разработка веб-приложений под ключ — Axecode',
+                    'description' => 'Разрабатываем веб-приложения для бизнеса: личные кабинеты, CRM, SaaS и B2B-порталы.',
+                    'mainEntity' => [
+                        '@id' => $baseUrl . '/razrabotka-veb-prilozheniy#service',
+                    ],
+                    'inLanguage' => 'ru-RU',
+                ],
+                [
+                    '@type' => 'FAQPage',
+                    'mainEntity' => [
+                        [
+                            '@type' => 'Question',
+                            'name' => 'Сколько стоит разработка веб-приложения?',
+                            'acceptedAnswer' => [
+                                '@type' => 'Answer',
+                                'text' => 'Стоимость рассчитывается после discovery и зависит от модулей, интеграций, ролей пользователей и требований к нагрузке.',
+                            ],
+                        ],
+                        [
+                            '@type' => 'Question',
+                            'name' => 'За сколько можно запустить MVP?',
+                            'acceptedAnswer' => [
+                                '@type' => 'Answer',
+                                'text' => 'В большинстве случаев MVP запускается за 6–12 недель. Срок зависит от сложности бизнес-логики и количества интеграций.',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -74,9 +110,34 @@
         <div class="mx-auto max-w-6xl px-6">
             <p class="text-cyan-300 text-sm mb-4">Услуги Axecode</p>
             <h1 class="text-4xl md:text-5xl font-bold leading-tight max-w-4xl">Разработка веб-приложений под ключ</h1>
+            <p class="text-cyan-200/90 text-base mt-4 max-w-3xl">Коротко: строим веб-продукты, которые автоматизируют процессы и масштабируют бизнес — от MVP до стабильной production-системы.</p>
             <p class="text-gray-300 text-lg mt-6 max-w-3xl">
                 {{ $heroDescription }}
             </p>
+        </div>
+    </section>
+
+    <section class="py-14 border-t border-white/5">
+        <div class="mx-auto max-w-6xl px-6">
+            <h2 class="text-2xl font-semibold mb-8">Краткий ответ по услуге</h2>
+            <div class="grid md:grid-cols-2 gap-5">
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <h3 class="text-lg font-semibold">Когда нужен веб-продукт</h3>
+                    <p class="text-gray-300 mt-2">Если бизнесу нужна автоматизация процессов, личные кабинеты, CRM или SaaS-сервис с масштабируемой архитектурой и интеграциями.</p>
+                </article>
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <h3 class="text-lg font-semibold">Сроки</h3>
+                    <p class="text-gray-300 mt-2">MVP обычно запускается за 6–12 недель. Полноценный релиз зависит от бизнес-логики, ролей, интеграций и нагрузки.</p>
+                </article>
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <h3 class="text-lg font-semibold">Бюджет</h3>
+                    <p class="text-gray-300 mt-2">Формируется по модулям: UX/UI, backend, frontend, интеграции, DevOps и поддержка. После discovery фиксируем этапы и приоритеты.</p>
+                </article>
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <h3 class="text-lg font-semibold">Результат</h3>
+                    <p class="text-gray-300 mt-2">Рабочая веб-система с понятной архитектурой, API-интеграциями, аналитикой и дорожной картой развития после запуска.</p>
+                </article>
+            </div>
         </div>
     </section>
 
@@ -99,6 +160,22 @@
                 Используем современный стек (Laravel, React, API-first архитектура), проектируем масштабируемую
                 структуру, покрываем бизнес-логику, интеграции, роли/права, аналитику и поддержку после релиза.
             </p>
+        </div>
+    </section>
+
+    <section class="py-16 border-t border-white/5">
+        <div class="mx-auto max-w-4xl px-6">
+            <h2 class="text-2xl font-semibold mb-8">Частые вопросы</h2>
+            <div class="space-y-4">
+                <article class="rounded-2xl border border-white/10 p-6">
+                    <h3 class="font-semibold text-lg">Сколько стоит разработка веб-приложения?</h3>
+                    <p class="text-gray-300 mt-2">Стоимость рассчитывается после discovery и зависит от модулей, интеграций, ролей пользователей и требований к нагрузке.</p>
+                </article>
+                <article class="rounded-2xl border border-white/10 p-6">
+                    <h3 class="font-semibold text-lg">За сколько можно запустить MVP?</h3>
+                    <p class="text-gray-300 mt-2">В большинстве случаев MVP запускается за 6–12 недель. Срок зависит от сложности бизнес-логики и количества интеграций.</p>
+                </article>
+            </div>
         </div>
     </section>
 

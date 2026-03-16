@@ -70,6 +70,7 @@
         $yandexId = \App\Models\Setting::get('yandex_metrika_id');
         $googleId  = \App\Models\Setting::get('google_analytics_id');
         $gtmId = \App\Models\Setting::get('google_tag_manager_id');
+        $ymDebugMode = (string) request()->query('_ym_debug') === '2';
 
         $landingHero = json_decode((string) \App\Models\Setting::get('landing_hero_json', ''), true);
         $landingServices = json_decode((string) \App\Models\Setting::get('landing_services_json', ''), true);
@@ -119,17 +120,30 @@
     @if ($yandexId)
     <!-- Yandex Metrika -->
     <script>
-        window.addEventListener('load', function () {
-            setTimeout(function () {
+        (function () {
+            function initYandexMetrika() {
                 (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
                 m[i].l=1*new Date();
                 for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
                 k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
                 (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
                 const yandexCounterId = Number('{{ $yandexId }}');
                 ym(yandexCounterId, "init", { clickmap:true, trackLinks:true, accurateTrackBounce:true });
-            }, 3000);
-        }, { once: true });
+            }
+
+            // В debug-режиме (_ym_debug=2) инициализируем сразу,
+            // чтобы панель отладки Метрики появлялась корректно по документации.
+            const ymDebugMode = {{ $ymDebugMode ? 'true' : 'false' }};
+            if (ymDebugMode) {
+                initYandexMetrika();
+                return;
+            }
+
+            window.addEventListener('load', function () {
+                setTimeout(initYandexMetrika, 3000);
+            }, { once: true });
+        })();
     </script>
     <noscript><div><img src="https://mc.yandex.ru/watch/{{ $yandexId }}" style="position:absolute; left:-9999px;" alt=""></div></noscript>
     @endif

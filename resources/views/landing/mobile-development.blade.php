@@ -51,6 +51,7 @@
                 ],
                 [
                     '@type' => 'Service',
+                    '@id' => $baseUrl . '/razrabotka-mobilnyh-prilozheniy#service',
                     'name' => 'Разработка мобильных приложений',
                     'serviceType' => 'Mobile app development',
                     'provider' => [
@@ -58,7 +59,42 @@
                     ],
                     'areaServed' => 'RU',
                     'url' => $baseUrl . '/razrabotka-mobilnyh-prilozheniy',
+                    'mainEntityOfPage' => [
+                        '@id' => $baseUrl . '/razrabotka-mobilnyh-prilozheniy#webpage',
+                    ],
                     'description' => 'Разработка мобильных приложений под ключ для iOS и Android: аналитика, UX/UI, backend, публикация, поддержка.',
+                ],
+                [
+                    '@type' => 'WebPage',
+                    '@id' => $baseUrl . '/razrabotka-mobilnyh-prilozheniy#webpage',
+                    'url' => $baseUrl . '/razrabotka-mobilnyh-prilozheniy',
+                    'name' => 'Разработка мобильных приложений iOS и Android — Axecode',
+                    'description' => 'Разработка мобильных приложений для iOS и Android: от продуктовой идеи и UX до релиза в сторах.',
+                    'mainEntity' => [
+                        '@id' => $baseUrl . '/razrabotka-mobilnyh-prilozheniy#service',
+                    ],
+                    'inLanguage' => 'ru-RU',
+                ],
+                [
+                    '@type' => 'FAQPage',
+                    'mainEntity' => [
+                        [
+                            '@type' => 'Question',
+                            'name' => 'Сколько стоит разработка мобильного приложения?',
+                            'acceptedAnswer' => [
+                                '@type' => 'Answer',
+                                'text' => 'Стоимость зависит от платформ, функциональности, интеграций и дизайна. Оценка формируется после проработки требований и user flow.',
+                            ],
+                        ],
+                        [
+                            '@type' => 'Question',
+                            'name' => 'Сколько времени занимает запуск MVP?',
+                            'acceptedAnswer' => [
+                                '@type' => 'Answer',
+                                'text' => 'Обычно запуск MVP мобильного приложения занимает 8–14 недель. Срок зависит от сложности и объёма функционала.',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ];
@@ -74,9 +110,34 @@
         <div class="mx-auto max-w-6xl px-6">
             <p class="text-cyan-300 text-sm mb-4">Услуги Axecode</p>
             <h1 class="text-4xl md:text-5xl font-bold leading-tight max-w-4xl">Разработка мобильных приложений iOS и Android</h1>
+            <p class="text-cyan-200/90 text-base mt-4 max-w-3xl">Коротко: запускаем мобильные продукты для iOS/Android с фокусом на UX, скорость релиза и измеримый бизнес-результат.</p>
             <p class="text-gray-300 text-lg mt-6 max-w-3xl">
                 {{ $heroDescription }}
             </p>
+        </div>
+    </section>
+
+    <section class="py-14 border-t border-white/5">
+        <div class="mx-auto max-w-6xl px-6">
+            <h2 class="text-2xl font-semibold mb-8">Краткий ответ по услуге</h2>
+            <div class="grid md:grid-cols-2 gap-5">
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <h3 class="text-lg font-semibold">Когда нужен мобильный продукт</h3>
+                    <p class="text-gray-300 mt-2">Когда важны удержание, быстрый доступ к сервису и push-коммуникации: клиентские сервисы, внутренние приложения, MVP нового продукта.</p>
+                </article>
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <h3 class="text-lg font-semibold">Сроки</h3>
+                    <p class="text-gray-300 mt-2">MVP мобильного приложения обычно занимает 8–14 недель. Срок зависит от платформ, интеграций и сложности интерфейсов.</p>
+                </article>
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <h3 class="text-lg font-semibold">Бюджет</h3>
+                    <p class="text-gray-300 mt-2">Влияют набор функций, выбранный стек (кроссплатформа/натив), backend, аналитика и публикация в App Store/Google Play.</p>
+                </article>
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <h3 class="text-lg font-semibold">Результат</h3>
+                    <p class="text-gray-300 mt-2">Приложение для iOS/Android с подготовленной инфраструктурой, метриками, релизным пайплайном и планом развития продукта.</p>
+                </article>
+            </div>
         </div>
     </section>
 
@@ -100,6 +161,22 @@
                 <li>Нативные сценарии для high-load и сложного UX</li>
                 <li>MVP с последующим масштабированием продукта</li>
             </ul>
+        </div>
+    </section>
+
+    <section class="py-16 border-t border-white/5">
+        <div class="mx-auto max-w-4xl px-6">
+            <h2 class="text-2xl font-semibold mb-8">Частые вопросы</h2>
+            <div class="space-y-4">
+                <article class="rounded-2xl border border-white/10 p-6">
+                    <h3 class="font-semibold text-lg">Сколько стоит разработка мобильного приложения?</h3>
+                    <p class="text-gray-300 mt-2">Стоимость зависит от платформ, функциональности, интеграций и дизайна. Оценка формируется после проработки требований и user flow.</p>
+                </article>
+                <article class="rounded-2xl border border-white/10 p-6">
+                    <h3 class="font-semibold text-lg">Сколько времени занимает запуск MVP?</h3>
+                    <p class="text-gray-300 mt-2">Обычно запуск MVP мобильного приложения занимает 8–14 недель. Срок зависит от сложности и объёма функционала.</p>
+                </article>
+            </div>
         </div>
     </section>
 

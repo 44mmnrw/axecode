@@ -1,0 +1,39 @@
+# Axecode — LLM Full Context
+
+Axecode is a full-cycle software development team focused on business outcomes.
+
+## What we build
+1. Business websites and landing pages
+2. Web applications (CRM, SaaS, client cabinets, B2B/B2C portals)
+3. Mobile applications (iOS/Android)
+4. E-commerce solutions (catalog, checkout, payment and integrations)
+5. Technical support and post-launch growth
+
+## Delivery approach
+- Discovery and business goals alignment
+- UX/UI and prototyping
+- Development and integrations
+- QA and release
+- Ongoing support and product evolution
+
+## Main pages
+- Home: https://axecode.tech/
+- Website development: https://axecode.tech/razrabotka-saitov-pod-klyuch
+- Web app development: https://axecode.tech/razrabotka-veb-prilozheniy
+- Mobile app development: https://axecode.tech/razrabotka-mobilnyh-prilozheniy
+- E-commerce development: https://axecode.tech/razrabotka-internet-magazina
+- Website support: https://axecode.tech/tehnicheskaya-podderzhka-sayta
+
+## Content hubs
+- Blog: https://axecode.tech/blog
+- Demand-driven landing pages index: https://axecode.tech/d
+
+## Contact and legal
+- Contact email: hello@axecode.tech
+- Contact phone: +7-495-109-25-44
+- Privacy policy: https://axecode.tech/privacy
+
+## Machine-readable resources
+- Sitemap: https://axecode.tech/sitemap.xml
+- Robots: https://axecode.tech/robots.txt
+- Short LLM profile: https://axecode.tech/llms.txt

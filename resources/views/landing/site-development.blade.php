@@ -51,6 +51,7 @@
                 ],
                 [
                     '@type' => 'Service',
+                    '@id' => $baseUrl . '/razrabotka-saitov-pod-klyuch#service',
                     'name' => 'Разработка сайтов под ключ',
                     'serviceType' => 'Website development',
                     'provider' => [
@@ -58,7 +59,21 @@
                     ],
                     'areaServed' => 'RU',
                     'url' => $baseUrl . '/razrabotka-saitov-pod-klyuch',
+                    'mainEntityOfPage' => [
+                        '@id' => $baseUrl . '/razrabotka-saitov-pod-klyuch#webpage',
+                    ],
                     'description' => 'Разработка сайтов под ключ для бизнеса: корпоративные сайты, лендинги, интернет-магазины, интеграции и поддержка.',
+                ],
+                [
+                    '@type' => 'WebPage',
+                    '@id' => $baseUrl . '/razrabotka-saitov-pod-klyuch#webpage',
+                    'url' => $baseUrl . '/razrabotka-saitov-pod-klyuch',
+                    'name' => 'Разработка сайтов под ключ для бизнеса — Axecode',
+                    'description' => 'Разрабатываем сайты под задачи бизнеса: корпоративные, лендинги и интернет-магазины.',
+                    'mainEntity' => [
+                        '@id' => $baseUrl . '/razrabotka-saitov-pod-klyuch#service',
+                    ],
+                    'inLanguage' => 'ru-RU',
                 ],
                 [
                     '@type' => 'FAQPage',
@@ -95,6 +110,7 @@
         <div class="mx-auto max-w-6xl px-6">
             <p class="text-cyan-300 text-sm mb-4">Услуги Axecode</p>
             <h1 class="text-4xl md:text-5xl font-bold leading-tight max-w-4xl">Разработка сайтов под ключ для бизнеса</h1>
+            <p class="text-cyan-200/90 text-base mt-4 max-w-3xl">Коротко: проектируем и запускаем сайты, которые приносят заявки и поддерживают рост бизнеса — от идеи до релиза и сопровождения.</p>
             <p class="text-gray-300 text-lg mt-6 max-w-3xl">
                 {{ $heroDescription }}
             </p>
@@ -103,6 +119,30 @@
                 <span class="rounded-full border border-white/10 px-4 py-2">Landing Page</span>
                 <span class="rounded-full border border-white/10 px-4 py-2">Интернет-магазины</span>
                 <span class="rounded-full border border-white/10 px-4 py-2">Интеграции CRM/аналитики</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-14 border-t border-white/5">
+        <div class="mx-auto max-w-6xl px-6">
+            <h2 class="text-2xl font-semibold mb-8">Краткий ответ по услуге</h2>
+            <div class="grid md:grid-cols-2 gap-5">
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <h3 class="text-lg font-semibold">Что это и для кого</h3>
+                    <p class="text-gray-300 mt-2">Разработка сайта под ключ подходит компаниям, которым нужен рабочий инструмент продаж и доверия: от корпоративного сайта до лендинга и интернет-магазина.</p>
+                </article>
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <h3 class="text-lg font-semibold">Сроки</h3>
+                    <p class="text-gray-300 mt-2">Обычно от 3 до 10 недель: зависит от количества страниц, функций, интеграций и количества раундов согласования.</p>
+                </article>
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <h3 class="text-lg font-semibold">Бюджет</h3>
+                    <p class="text-gray-300 mt-2">Итоговая стоимость рассчитывается после брифа. На цену влияют структура, дизайн, интеграции, контент и требования к SEO/скорости.</p>
+                </article>
+                <article class="rounded-2xl border border-white/10 bg-white/5 p-6">
+                    <h3 class="text-lg font-semibold">Что получите на выходе</h3>
+                    <p class="text-gray-300 mt-2">Готовый сайт с понятной архитектурой, адаптивным интерфейсом, базовой SEO-подготовкой и возможностью дальнейшего масштабирования.</p>
+                </article>
             </div>
         </div>
     </section>

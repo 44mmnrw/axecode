@@ -1,0 +1,28 @@
+# Axecode
+
+> Axecode — команда разработки цифровых продуктов для бизнеса: сайты, веб-приложения, мобильные приложения, e-commerce и техподдержка.
+
+## Company
+- Name: Axecode
+- Website: https://axecode.tech
+- Email: hello@axecode.tech
+- Phone: +7-495-109-25-44
+- Language: ru-RU
+
+## Core services
+- Разработка сайтов под ключ: https://axecode.tech/razrabotka-saitov-pod-klyuch
+- Разработка веб-приложений: https://axecode.tech/razrabotka-veb-prilozheniy
+- Разработка мобильных приложений: https://axecode.tech/razrabotka-mobilnyh-prilozheniy
+- Разработка интернет-магазина: https://axecode.tech/razrabotka-internet-magazina
+- Техническая поддержка сайта: https://axecode.tech/tehnicheskaya-podderzhka-sayta
+
+## Knowledge pages
+- Blog: https://axecode.tech/blog
+- D-keyword index: https://axecode.tech/d
+
+## Policies
+- Privacy: https://axecode.tech/privacy
+
+## Crawling hints
+- Sitemap: https://axecode.tech/sitemap.xml
+- Robots: https://axecode.tech/robots.txt
